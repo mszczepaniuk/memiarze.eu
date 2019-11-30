@@ -14,4 +14,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="wwwroot\img\memes\" />
+    <Folder Include="wwwroot\img\avatars\" />
+  </ItemGroup>
+
 </Project>
