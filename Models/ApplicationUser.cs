@@ -12,5 +12,7 @@ namespace memiarzeEu.Models
         public ICollection<Meme> Memes { get; set; }
         [Required]
         public DateTime JoinDate { get; set; }
+        [MaxLength(100)]
+        public string About { get; set; }
     }
 }

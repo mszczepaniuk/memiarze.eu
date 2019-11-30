@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using memiarzeEu.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,5 +17,20 @@ namespace memiarzeEu.Data
 
         public DbSet<Meme> Memes { get; set; }
         public DbSet<XdPoint> XdPoints { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole
+                {
+                    Name = "Admin"
+                },
+                new IdentityRole
+                {
+                    Name = "User"
+                }
+                );
+        }
     }
 }
