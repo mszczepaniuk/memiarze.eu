@@ -23,7 +23,6 @@
 
 
   <ItemGroup>
-    <Folder Include="Views\Account\" />
     <Folder Include="wwwroot\img\memes\" />
     <Folder Include="wwwroot\img\avatars\" />
   </ItemGroup>
