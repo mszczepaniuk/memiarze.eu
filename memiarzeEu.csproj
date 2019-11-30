@@ -5,6 +5,13 @@
     <UserSecretsId>aspnet-memiarzeEu-C3A9E130-48C7-40A0-B4C9-3057A2716262</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20191130205942_IntialMigration.cs" />
+    <Compile Remove="Data\Migrations\20191130205942_IntialMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191130210221_InitialMigration.cs" />
+    <Compile Remove="Data\Migrations\20191130210221_InitialMigration.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.0.0" />
