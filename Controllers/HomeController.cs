@@ -56,7 +56,7 @@ namespace memiarzeEu.Controllers
 
             if (ModelState.IsValid)
             {
-                string uploadsFolder = Path.Combine(hostEnvironment.ContentRootPath, "wwwroot", "img", "avatars");
+                string uploadsFolder = Path.Combine(hostEnvironment.ContentRootPath, "wwwroot", "img", "memes");
                 string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))

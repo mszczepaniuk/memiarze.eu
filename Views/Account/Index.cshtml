@@ -44,7 +44,7 @@
 
                     @if (User.Identity.Name == Model.ProfileOwner.UserName)
                     {
-                        <a asp-action="EditUser" class="btn btn-secondary btn-block">Edytuj konto</a>
+                        <a asp-action="EditUser" asp-route-id=@Model.ProfileOwner.Id class="btn btn-secondary btn-block">Edytuj konto</a>
                     }
 
                     @if ((User.IsInRole("Admin")) || (User.Identity.Name == Model.ProfileOwner.UserName))

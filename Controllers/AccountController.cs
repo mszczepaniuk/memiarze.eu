@@ -3,8 +3,10 @@ using memiarzeEu.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,11 +16,13 @@ namespace memiarzeEu.Controllers
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly IHostEnvironment hostEnvironment;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHostEnvironment hostEnvironment)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.hostEnvironment = hostEnvironment;
         }
 
         [HttpGet]
@@ -82,19 +86,61 @@ namespace memiarzeEu.Controllers
             return View(model);
         }
 
+        // TODO: Get current about and avatarPath even if null. Add authorization and NotFound() view.
         [HttpGet]
-        public IActionResult EditUser(string id)
+        public async Task<IActionResult> EditUser(string id)
         {
-            return View();
+            var user = await userManager.FindByIdAsync(id);
+            var model = new EditUserViewModel
+            {
+                Id = id,
+                About = user.About
+            };
+            return View(model);
         }
 
-        //[HttpPost]
-        //public IActionResult Edit(string id)
-        //{
-        //    return View();
-        //}
+        [HttpPost]
+        public async Task<IActionResult> EditUser(EditUserViewModel model)
+        {
+            if (model.Avatar == null)
+            {
+                ModelState.AddModelError("", "Prosze wybrac zdjecie");
+                return View(model);
+            }
 
-        //TODO: Add NotFound() Exception page and succes confirmation page.
+            if (ModelState.IsValid)
+            {
+                string uploadsFolder = Path.Combine(hostEnvironment.ContentRootPath, "wwwroot", "img", "avatars");
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Avatar.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.Avatar.CopyTo(fileStream);
+                }
+
+                var user = await userManager.FindByIdAsync(model.Id);
+                if ((user.AvatarPath != null) && (System.IO.File.Exists(Path.Combine(uploadsFolder, user.AvatarPath))))
+                {
+                    string oldAvatarPath = Path.Combine(uploadsFolder, user.AvatarPath);
+                    System.IO.File.Delete(oldAvatarPath);
+                }
+
+                user.AvatarPath = uniqueFileName;
+                user.About = model.About;
+                var result = await userManager.UpdateAsync(user);
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", "Cos poszlo nie tak podczas aktualizowania zdjecia");
+                    return View(model);
+                }
+
+                return View($"Account/Index/{model.Id}");
+            }
+            ModelState.AddModelError("", "Cos poszlo nie tak podczas dodawania zdjecia");
+            return View(model);
+        }
+
+        //TODO: Add NotFound() Exception page and succes confirmation page. Add authorization for users wanting to delete their own accounts.
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string id)
         {
