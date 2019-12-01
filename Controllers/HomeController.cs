@@ -12,6 +12,7 @@ using System.IO;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity;
 using memiarzeEu.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace memiarzeEu.Controllers
 {
@@ -31,7 +32,9 @@ namespace memiarzeEu.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            // Eager loading of ApplicationUser data
+            var model = dbContext.Memes.Include(meme => meme.ApplicationUser).ToList();
+            return View(model);
         }
 
         [HttpGet]
@@ -63,7 +66,7 @@ namespace memiarzeEu.Controllers
                 Meme meme = new Meme
                 {
                     Title = model.Title,
-                    ImageLink = uniqueFileName,
+                    ImagePath = uniqueFileName,
                     CreationDate = DateTime.Now,
                     ApplicationUser = await userManager.GetUserAsync(User),
                 };

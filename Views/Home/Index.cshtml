@@ -1,32 +1,27 @@
-﻿@{
+﻿@model ICollection<Meme>
+@{
     ViewData["Title"] = "Home Page";
 }
-    <div class="row">
-        <div class="col-md-3">
-            <a class="btn btn-primary btn-block text-center mt-2 mb-2" asp-action="AddMeme" asp-controller="Home" role="button">Dodaj Mem</a>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card mt-2 mb-2">
-                <div class="card-header">Header</div>
-                <div class="card-body">
-                    <img class="card-img" src="~/img/avatars/default.png" />
-                </div>
-                <div class="card-footer">Footer</div>
-            </div>
-            <div class="card mt-2 mb-2">
-                <div class="card-header">Header</div>
-                <div class="card-body">
-                    <img class="card-img" src="~/img/avatars/default.png" />
-                </div>
-                <div class="card-footer">Footer</div>
-            </div>
-            <div class="card mt-2 mb-2">
-                <div class="card-header">Header</div>
-                <div class="card-body">
-                    <img class="card-img" src="~/img/avatars/default.png" />
-                </div>
-                <div class="card-footer">Footer</div>
-            </div>
-        </div>
+<div class="row">
+    <div class="col-md-3">
+        <a class="btn btn-primary btn-block text-center mt-2 mb-2" asp-action="AddMeme" asp-controller="Home" role="button">Dodaj Mem</a>
     </div>
+    <div class="col-md-6">
+        @if (Model.Any())
+        {
+            foreach (var meme in Model)
+            {
+                var imagePath = $"/img/avatars/{System.Uri.EscapeDataString(meme.ImagePath)}";
+                var footerText = String.Concat(meme.CreationDate.ToShortDateString(), $" {meme.CreationDate.ToShortTimeString()}", $", {meme.ApplicationUser.UserName}");
+
+                <div class="card mt-2 mb-2">
+                    <div class="card-header">@meme.Title</div>
+                    <div class="card-body">
+                        <img class="card-img" src=@imagePath />
+                    </div>
+                    <div class="card-footer">@footerText</div>
+                </div>
+            }
+        }
+    </div>
+</div>

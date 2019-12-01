@@ -13,7 +13,7 @@ namespace memiarzeEu.Models
         [Required]
         public string Title { get; set; }
         [Required]
-        public string ImageLink { get; set; }
+        public string ImagePath { get; set; }
         [Required]
         public DateTime CreationDate { get; set; }
         public string ApplicationUserId { get; set; }

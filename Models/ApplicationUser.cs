@@ -14,6 +14,6 @@ namespace memiarzeEu.Models
         public DateTime JoinDate { get; set; }
         [MaxLength(100)]
         public string About { get; set; }
-        public string AvatarLink { get; set; }
+        public string AvatarPath { get; set; }
     }
 }
