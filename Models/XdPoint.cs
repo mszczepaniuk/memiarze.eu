@@ -14,5 +14,6 @@ namespace memiarzeEu.Models
         public int MemeId { get; set; }
         [Required]
         public Meme Meme { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }

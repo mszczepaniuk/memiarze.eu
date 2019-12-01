@@ -4,14 +4,14 @@
 }
 <div class="row">
     <div class="col-md-3">
-        <a class="btn btn-primary btn-block text-center mt-2 mb-2" asp-action="AddMeme" asp-controller="Home" role="button">Dodaj Mem</a>
+        <a class="btn btn-primary btn-block text-center mt-2 mb-2" asp-action="AddMeme" asp-controller="Home" role="button">Dodaj</a>
     </div>
     <div class="col-md-6">
         @if (Model.Any())
         {
             foreach (var meme in Model)
             {
-                var imagePath = $"/img/avatars/{System.Uri.EscapeDataString(meme.ImagePath)}";
+                var imagePath = $"/img/memes/{System.Uri.EscapeDataString(meme.ImagePath)}";
                 var dateText = meme.CreationDate.ToString("MM/dd/yyyy HH:mm");
                 var authorName = meme.ApplicationUser == null ? "Usuniete konto" : meme.ApplicationUser.UserName;
 

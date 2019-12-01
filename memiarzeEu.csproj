@@ -25,7 +25,6 @@
 
 
   <ItemGroup>
-    <Folder Include="wwwroot\img\memes\" />
     <Folder Include="wwwroot\img\avatars\" />
   </ItemGroup>
 
