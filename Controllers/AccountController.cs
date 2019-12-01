@@ -58,7 +58,7 @@ namespace memiarzeEu.Controllers
                 {
                     await userManager.AddToRoleAsync(user, "User");
                     await signInManager.SignInAsync(user, false);
-                    return View($"Account/Index/{user.Id}");
+                    return RedirectToAction("Index", "Home");
                 }
 
                 foreach (var error in result.Errors)
@@ -78,14 +78,29 @@ namespace memiarzeEu.Controllers
 
         public async Task<IActionResult> Index(string id)
         {
-            ApplicationUser model = await userManager.FindByIdAsync(id);
+            AccountIndexViewModel model = new AccountIndexViewModel { ProfileOwner = await userManager.FindByIdAsync(id) };
             return View(model);
         }
 
         [HttpGet]
-        public IActionResult Edit(string id)
+        public IActionResult EditUser(string id)
         {
             return View();
+        }
+
+        //[HttpPost]
+        //public IActionResult Edit(string id)
+        //{
+        //    return View();
+        //}
+
+        //TODO: Add NotFound() Exception page and succes confirmation page.
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+            await userManager.DeleteAsync(user);
+            return View("../Home/Index");
         }
     }
 }
