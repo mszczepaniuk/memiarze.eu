@@ -263,9 +263,6 @@ namespace memiarzeEu.Data.Migrations
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("MemeId")
                         .HasColumnType("int");
 
