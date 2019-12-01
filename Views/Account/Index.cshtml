@@ -42,12 +42,12 @@
                     <a asp-action="" class="btn btn-primary btn-block">Zobacz wszystkie</a>
                     <a asp-action="" class="btn btn-primary btn-block">Zobacz top 3</a>
 
-                    @if (User.Identity == Model.ProfileOwner)
+                    @if (User.Identity.Name == Model.ProfileOwner.UserName)
                     {
                         <a asp-action="EditUser" class="btn btn-secondary btn-block">Edytuj konto</a>
                     }
 
-                    @if (User.IsInRole("Admin"))
+                    @if ((User.IsInRole("Admin")) || (User.Identity.Name == Model.ProfileOwner.UserName))
                     {
                         <form method="post" asp-action="DeleteUser" asp-route-id=@Model.ProfileOwner.Id class="mt-2">
                             @* TODO: Prettier way of confirming delete action. *@
