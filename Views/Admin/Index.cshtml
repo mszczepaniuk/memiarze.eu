@@ -1,20 +1,21 @@
-﻿@model ICollection<ApplicationUser>
+﻿@model AdminIndexViewModel
 @{
     ViewBag.Title = "Admin";
 }
 
 <h2>Dodaj administratora</h2>
 <div asp-validation-summary="All" class="text-danger"></div>
-<div class="row mb-3">
-    <div class="col-md-8">
-        <input class="form-control" />
+<form method="post" asp-action="AddAdmin">
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <input asp-for=@Model.UserName id="userName" name="userName" type="text" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-primary" type="Submit">Dodaj</button>
+        </div>
     </div>
-    <div class="col-md-4">
-        <a asp-action="AddAdmin"  class="btn btn-danger">Usun</a>
-        @*TODO ogarnac to jakos*@
-    </div>
-</div>
-@if (Model.Any())
+</form>
+@if (Model.Admins.Any())
 {
     <h2>Obecni administratorzy</h2>
     <table class="table">
@@ -25,7 +26,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var admin in Model)
+            @foreach (var admin in Model.Admins)
             {
                 <tr>
                     <td>@admin.UserName</td>

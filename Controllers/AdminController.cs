@@ -22,14 +22,14 @@ namespace memiarzeEu.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var model = await userManager.GetUsersInRoleAsync("Admin");
+            var model = new AdminIndexViewModel { Admins = await userManager.GetUsersInRoleAsync("Admin") };
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAdmin(string userName)
+        public async Task<IActionResult> AddAdmin(AdminIndexViewModel model)
         {
-            await userManager.AddToRoleAsync(await userManager.FindByNameAsync(userName), "Admin");
+            await userManager.AddToRoleAsync(await userManager.FindByNameAsync(model.UserName), "Admin");
             return RedirectToAction("Index");
         }
     }
