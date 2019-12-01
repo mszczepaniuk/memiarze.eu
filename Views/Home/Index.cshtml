@@ -12,7 +12,7 @@
             foreach (var meme in Model)
             {
                 var imagePath = $"/img/avatars/{System.Uri.EscapeDataString(meme.ImagePath)}";
-                var footerText = String.Concat(meme.CreationDate.ToShortDateString(), $" {meme.CreationDate.ToShortTimeString()}", $", {meme.ApplicationUser.UserName}");
+                var footerText = String.Concat(meme.CreationDate.ToShortDateString(), $" {meme.CreationDate.ToShortTimeString()}", $", {meme.ApplicationUser.UserName ?? "Usuniete konto"}");
 
                 <div class="card mt-2 mb-2">
                     <div class="card-header">@meme.Title</div>

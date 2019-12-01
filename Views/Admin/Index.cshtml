@@ -1,0 +1,38 @@
+﻿@model ICollection<ApplicationUser>
+@{
+    ViewBag.Title = "Admin";
+}
+
+<h2>Dodaj administratora</h2>
+<div asp-validation-summary="All" class="text-danger"></div>
+<div class="row mb-3">
+    <div class="col-md-8">
+        <input class="form-control" />
+    </div>
+    <div class="col-md-4">
+        <a asp-action="AddAdmin"  class="btn btn-danger">Usun</a>
+        @*TODO ogarnac to jakos*@
+    </div>
+</div>
+@if (Model.Any())
+{
+    <h2>Obecni administratorzy</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Nazwa uzytkownika</th>
+                <th scope="col">Akcja</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var admin in Model)
+            {
+                <tr>
+                    <td>@admin.UserName</td>
+                    <td><a asp-action="RemoveAdmin" asp-route-userName="@admin.UserName" class="btn btn-danger">Usun</a></td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}

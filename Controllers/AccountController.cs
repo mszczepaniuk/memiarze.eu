@@ -56,6 +56,7 @@ namespace memiarzeEu.Controllers
 
                 if (result.Succeeded)
                 {
+                    await userManager.AddToRoleAsync(user, "User");
                     await signInManager.SignInAsync(user, false);
                     return View($"Account/Index/{user.Id}");
                 }
