@@ -12,7 +12,6 @@ namespace memiarzeEu.ViewModels
         [Required]
         [Display(Name = "Tytul")]
         public string Title { get; set; }
-        [Required]
         public IFormFile Image { get; set; }
     }
 }
