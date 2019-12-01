@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using memiarzeEu.Models;
 using memiarzeEu.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace memiarzeEu.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> userManager;
