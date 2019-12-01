@@ -1,8 +1,32 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+    <div class="row">
+        <div class="col-md-3">
+            <a class="btn btn-primary btn-block text-center mt-2 mb-2" asp-action="AddMeme" asp-controller="Home" role="button">Dodaj Mem</a>
+        </div>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+        <div class="col-md-6">
+            <div class="card mt-2 mb-2">
+                <div class="card-header">Header</div>
+                <div class="card-body">
+                    <img class="card-img" src="~/img/avatars/default.png" />
+                </div>
+                <div class="card-footer">Footer</div>
+            </div>
+            <div class="card mt-2 mb-2">
+                <div class="card-header">Header</div>
+                <div class="card-body">
+                    <img class="card-img" src="~/img/avatars/default.png" />
+                </div>
+                <div class="card-footer">Footer</div>
+            </div>
+            <div class="card mt-2 mb-2">
+                <div class="card-header">Header</div>
+                <div class="card-body">
+                    <img class="card-img" src="~/img/avatars/default.png" />
+                </div>
+                <div class="card-footer">Footer</div>
+            </div>
+        </div>
+    </div>

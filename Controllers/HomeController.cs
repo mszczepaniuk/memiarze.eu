@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using memiarzeEu.Models;
 using memiarzeEu.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace memiarzeEu.Controllers
 {
@@ -18,6 +19,13 @@ namespace memiarzeEu.Controllers
         }
 
         public IActionResult Index()
+        {
+            return View();
+        }
+        
+        [HttpGet]
+        [Authorize]
+        public IActionResult AddMeme()
         {
             return View();
         }

@@ -80,5 +80,11 @@ namespace memiarzeEu.Controllers
             ApplicationUser model = await userManager.FindByIdAsync(id);
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult Edit(string id)
+        {
+            return View();
+        }
     }
 }
