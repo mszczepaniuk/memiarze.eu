@@ -21,16 +21,10 @@ namespace memiarzeEu.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<IdentityRole>().HasData(
-                new IdentityRole
-                {
-                    Name = "Admin"
-                },
-                new IdentityRole
-                {
-                    Name = "User"
-                }
-                );
+            modelBuilder.Entity<Meme>()
+                .HasOne(b => b.ApplicationUser)
+                .WithMany(a => a.Memes)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
