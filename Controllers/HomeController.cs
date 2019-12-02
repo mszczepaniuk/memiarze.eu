@@ -78,6 +78,13 @@ namespace memiarzeEu.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> RandomMeme()
+        {
+            // TODO Understand this.
+            var model = await dbContext.Memes.OrderBy(r => Guid.NewGuid()).Take(1).FirstAsync();
+            return View(model);
+        }
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
