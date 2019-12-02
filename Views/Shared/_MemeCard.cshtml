@@ -9,5 +9,24 @@
     <div class="card-body p-0">
         <img class="card-img m-0" src=@imagePath />
     </div>
-    <div class="card-footer">@authorName, @dateText</div>
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-8">
+                @dateText
+                , <a asp-action="Index" asp-controller="Account" asp-route-id=@Model.ApplicationUserId style="text-decoration: none; color: black;">@authorName</a>
+            </div>
+            <div class="col-4 ml-auto">
+                @if (Model.IsXdClicked)
+                {
+                    <input hidden asp-for=@Model.Id>
+                    <a style="text-decoration: none; color: black; font-weight: bold;">xD!</a>
+                }
+                else
+                {
+                    <input hidden asp-for=@Model.Id>
+                    <button type="submit" style="text-decoration: none; color: black;">xD</button>
+                }
+            </div>
+        </div>
+    </div>
 </div>

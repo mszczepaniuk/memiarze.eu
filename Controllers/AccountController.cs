@@ -83,16 +83,17 @@ namespace memiarzeEu.Controllers
 
         public async Task<IActionResult> Index(string id)
         {
-            AccountIndexViewModel model = new AccountIndexViewModel { ProfileOwner = await userManager.FindByIdAsync(id) };
-            return View(model);
+            if (id == null) return View("NotFound");
+            return View(new AccountIndexViewModel { ProfileOwner = await userManager.FindByIdAsync(id) });
         }
 
-        // TODO: Add authorization and NotFound() view.
+        // TODO: Check authorization.
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> EditUser(string id)
         {
             var user = await userManager.FindByIdAsync(id);
+            if (user == null) return View("NotFound");
             // Hacky authorization
             if (user.UserName != User.Identity.Name) throw new InvalidCredentialException();
             var model = new EditUserViewModel
@@ -145,11 +146,12 @@ namespace memiarzeEu.Controllers
             return View(model);
         }
 
-        //TODO: Add NotFound() Exception page and succes confirmation page. Add authorization for users wanting to delete their own accounts.
+        //TODO: Add succes confirmation page. Add authorization for users wanting to delete their own accounts.
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await userManager.FindByIdAsync(id);
+            if (user == null) return View("NotFound");
             await userManager.DeleteAsync(user);
             return View("../Home/Index");
         }
