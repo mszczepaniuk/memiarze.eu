@@ -32,8 +32,7 @@ namespace memiarzeEu.Controllers
 
         public IActionResult Index()
         {
-            // Eager loading of ApplicationUser data
-            var model = dbContext.Memes.Include(meme => meme.ApplicationUser).Include(meme => meme.XdPoints).ToList();
+            var model = dbContext.Memes.Include(meme => meme.ApplicationUser).Include(meme => meme.XdPoints).OrderByDescending(m => m.CreationDate).ToList();
             foreach (var meme in model)
             {
                 if (dbContext.XdPoints
