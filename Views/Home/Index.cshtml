@@ -12,41 +12,7 @@
             var memes = Model.ToArray();
             for (int i = 0; i < Model.Count; i++)
             {
-
-                var imagePath = $"/img/memes/{System.Uri.EscapeDataString(memes[i].ImagePath)}";
-                var dateText = memes[i].CreationDate.ToString("MM/dd/yyyy HH:mm");
-                var authorName = memes[i].ApplicationUser == null ? "Usuniete konto" : memes[i].ApplicationUser.UserName;
-
-                <div class="card mt-2 mb-2">
-                    <div class="card-header">@memes[i].Title</div>
-                    <div class="card-body p-0">
-                        <img class="card-img m-0" src=@imagePath />
-                    </div>
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col-8">
-                                @dateText
-                                , <a asp-action="Index" asp-controller="Account" asp-route-id=@memes[i].ApplicationUserId style="text-decoration: none; color: black;">@authorName</a>
-                            </div>
-                            <div class="col-4 ml-auto">
-                                @if (memes[i].IsXdClicked)
-                                {
-                                    <form method="post" id="xDform" asp-action="RemoveXdIndex">
-                                        <input hidden asp-for=@memes[i].Id>
-                                        <a style="text-decoration: none; color: black; font-weight: bold;">xD!</a>
-                                    </form>
-                                }
-                                else
-                                {
-                                    <form method="post" asp-action="AwardXdIndex">
-                                        <input hidden asp-for=@memes[i].Id>
-                                        <a style="text-decoration: none; color: black;">xD</a>
-                                    </form>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @await Html.PartialAsync("_MemeCard", memes[i])
             }
         }
     </div>
