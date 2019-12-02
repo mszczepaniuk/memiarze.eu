@@ -1,4 +1,5 @@
-﻿using memiarzeEu.Models;
+﻿using memiarzeEu.Data;
+using memiarzeEu.Models;
 using memiarzeEu.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Authentication;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace memiarzeEu.Controllers
 {
@@ -18,12 +20,14 @@ namespace memiarzeEu.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly IHostEnvironment hostEnvironment;
+        private readonly ApplicationDbContext dbContext;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHostEnvironment hostEnvironment)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHostEnvironment hostEnvironment, ApplicationDbContext dbContext)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.hostEnvironment = hostEnvironment;
+            this.dbContext = dbContext;
         }
 
         [HttpGet]
@@ -83,9 +87,10 @@ namespace memiarzeEu.Controllers
 
         public async Task<IActionResult> Index(string id)
         {
-            var model = await userManager.FindByIdAsync(id);
-            if (model == null) return View("NotFound");
-            return View(model);
+            var user = await userManager.FindByIdAsync(id);
+            if (user == null) return View("NotFound");
+            user.Memes = dbContext.Memes.Where(m => m.ApplicationUserId == id).Include(m => m.XdPoints).OrderByDescending(m => m.CreationDate).ToList();
+            return View(user);
         }
 
         // TODO: Check authorization.
