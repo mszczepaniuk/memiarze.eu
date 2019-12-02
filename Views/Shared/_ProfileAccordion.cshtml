@@ -1,0 +1,59 @@
+﻿@model ApplicationUser
+@{
+    var avatarPath = Model.AvatarPath != null ? $"/img/avatars/{System.Uri.EscapeDataString(Model.AvatarPath)}" : "/img/avatars/default.png";
+    var about = Model.About ?? "Uzytkownik nic o sobie nie napisal";
+}
+
+<div class="panel" id="accordion">
+    <div class="card">
+        <div class="card-header">
+            <a class="collapsed card-link" data-toggle="collapse" href="#collapseone">
+                @Model.UserName
+            </a>
+        </div>
+        <div id="collapseone" class="collapse" data-parent="#accordion">
+            <div class="card-body">
+                <img class="card-img" src=@avatarPath asp-append-version="true" />
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <a class="collapsed card-link" data-toggle="collapse" href="#collapsetwo">
+                O mnie
+            </a>
+        </div>
+        <div id="collapsetwo" class="collapse" data-parent="#accordion">
+            <div class="card-body">
+                @about
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <a class="collapsed card-link" data-toggle="collapse" href="#collapsethree">
+                Akcje
+            </a>
+        </div>
+        <div id="collapsethree" class="collapse" data-parent="#accordion">
+            <div class="card-body">
+                <a asp-action="" class="btn btn-primary btn-block">Zobacz wszystkie</a>
+                <a asp-action="" class="btn btn-primary btn-block">Zobacz top 3</a>
+
+                @if (User.Identity.Name == Model.UserName)
+                {
+                    <a asp-action="EditUser" asp-route-id=@Model.Id class="btn btn-secondary btn-block">Edytuj konto</a>
+                }
+
+                @if ((User.IsInRole("Admin")) || (User.Identity.Name == Model.UserName))
+                {
+                    <form method="post" asp-action="DeleteUser" asp-route-id=@Model.Id class="mt-2">
+                        @* TODO: Prettier way of confirming delete action. *@
+                        <button class="btn btn-danger btn-block" type="submit" onclick="return confirm('Czy na pewno chcesz usunac konto: @Model.UserName')">Usun konto</button>
+                    </form>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
