@@ -9,6 +9,7 @@
     <div class="row mb-3">
         <div class="col-md-8">
             <input asp-for=@Model.UserName id="userName" name="userName" type="text" class="form-control" />
+            <span asp-validation-for=@Model.UserName class="text-danger"></span>
         </div>
         <div class="col-md-4">
             <button class="btn btn-primary" type="Submit">Dodaj</button>
