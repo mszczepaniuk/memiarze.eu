@@ -1,0 +1,27 @@
+﻿@model ApplicationUser
+@{
+    ViewBag.Title = $"Top 3 - {Model.UserName}";
+
+}
+<div class="row">
+    <div class="col-md-3 mt-2 mb-2">
+        @await Html.PartialAsync("_ProfileAccordion", Model)
+    </div>
+    <div class="col-md-6  mt-2 mb-2">
+        @foreach (var meme in Model.Memes)
+        {
+            var imagePath = $"/img/memes/{System.Uri.EscapeDataString(meme.ImagePath)}";
+            var dateText = meme.CreationDate.ToString("MM/dd/yyyy HH:mm");
+            var authorName = meme.ApplicationUser == null ? "Usuniete konto" : meme.ApplicationUser.UserName;
+            var xDpoints = meme.XdPoints.Count;
+
+        <div class="card">
+            <img src="@imagePath" class="card-img" />
+            <a href="@imagePath" data-lightbox="top3" class="stretched-link">
+                @*<img src="@imagePath" />*@
+            </a>
+        </div>
+        }
+    </div>
+</div>
+<script src="~/js/lightbox-plus-jquery.min.js"></script>

@@ -161,5 +161,21 @@ namespace memiarzeEu.Controllers
             await userManager.DeleteAsync(user);
             return View("../Home/Index");
         }
+
+        public async Task<IActionResult> TopCarousel(string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+            if (user == null) return View("NotFound");
+            user.Memes = dbContext.Memes.Where(m => m.ApplicationUserId == id).Include(m => m.XdPoints).OrderByDescending(m => m.XdPoints.Count).Take(3).ToList();
+            return View(user);
+        }
+
+        public async Task<IActionResult> TopLightBox(string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+            if (user == null) return View("NotFound");
+            user.Memes = dbContext.Memes.Where(m => m.ApplicationUserId == id).Include(m => m.XdPoints).OrderByDescending(m => m.XdPoints.Count).Take(3).ToList();
+            return View(user);
+        }
     }
 }

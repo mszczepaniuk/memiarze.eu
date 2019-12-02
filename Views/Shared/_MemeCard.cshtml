@@ -5,7 +5,7 @@
     var authorName = Model.ApplicationUser == null ? "Usuniete konto" : Model.ApplicationUser.UserName;
     var xDpoints = Model.XdPoints.Count;
 }
-<div class="card mt-2 mb-2">
+<div class="card">
     <div class="card-header" style="font-weight: bold;">@Model.Title</div>
     <div class="card-body p-0">
         <img class="card-img m-0" src=@imagePath />

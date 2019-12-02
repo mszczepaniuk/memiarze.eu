@@ -13,7 +13,9 @@
         </div>
         <div id="collapseone" class="collapse" data-parent="#accordion">
             <div class="card-body">
-                <img class="card-img" src=@avatarPath asp-append-version="true" />
+                <a href="@avatarPath" data-lightbox="avatar">
+                    <img class="card-img" href="@avatarPath" asp-append-version="true" />
+                </a>
             </div>
         </div>
     </div>
@@ -37,8 +39,9 @@
         </div>
         <div id="collapsethree" class="collapse" data-parent="#accordion">
             <div class="card-body">
-                <a asp-action="" class="btn btn-primary btn-block">Zobacz wszystkie</a>
-                <a asp-action="" class="btn btn-primary btn-block">Zobacz top 3</a>
+                <a asp-action="Index" asp-controller="Account" asp-route-id=@Model.Id class="btn btn-primary btn-block">Wszystkie</a>
+                <a asp-action="TopCarousel" asp-controller="Account" asp-route-id=@Model.Id class="btn btn-primary btn-block">Top3 - karuzela</a>
+                <a asp-action="TopLightBox" asp-controller="Account" asp-route-id=@Model.Id class="btn btn-primary btn-block">Top3 - LightBox</a>
 
                 @if (User.Identity.Name == Model.UserName)
                 {
