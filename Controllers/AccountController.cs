@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 
 namespace memiarzeEu.Controllers
@@ -43,7 +44,7 @@ namespace memiarzeEu.Controllers
             }
             return View(model);
         }
-
+        // TODO: Fix views not loading after registering, loging or editing user.
         [HttpGet]
         public IActionResult Register()
         {
@@ -86,11 +87,14 @@ namespace memiarzeEu.Controllers
             return View(model);
         }
 
-        // TODO: Get current about and avatarPath even if null. Add authorization and NotFound() view.
+        // TODO: Add authorization and NotFound() view.
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> EditUser(string id)
         {
             var user = await userManager.FindByIdAsync(id);
+            // Hacky authorization
+            if (user.UserName != User.Identity.Name) throw new InvalidCredentialException();
             var model = new EditUserViewModel
             {
                 Id = id,
@@ -100,6 +104,7 @@ namespace memiarzeEu.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
             if (model.Avatar == null)
