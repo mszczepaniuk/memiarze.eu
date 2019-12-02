@@ -20,27 +20,17 @@ namespace memiarzeEu.Controllers
             this.userManager = userManager;
         }
 
-        //TODO Fix validation
-        public async Task<IActionResult> Index(AdminIndexViewModel model)
+        public async Task<IActionResult> Index()
         {
-            if (model.Admins == null)
-            {
-                model.Admins = await userManager.GetUsersInRoleAsync("Admin");
-                ModelState.Clear();
-            }
+            var model = new AdminIndexViewModel { Admins = await userManager.GetUsersInRoleAsync("Admin") };
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddAdmin(AdminIndexViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                var user = await userManager.FindByNameAsync(model.UserName);
-                if (user != null) { await userManager.AddToRoleAsync(user, "Admin"); }
-                else { return View("NotFound"); }
-            }
-            return RedirectToAction("Index", model);
+            await userManager.AddToRoleAsync(await userManager.FindByNameAsync(model.UserName), "Admin");
+            return RedirectToAction("Index");
         }
     }
 }
