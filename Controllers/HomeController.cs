@@ -33,7 +33,7 @@ namespace memiarzeEu.Controllers
         public IActionResult Index()
         {
             // Eager loading of ApplicationUser data
-            var model = dbContext.Memes.Include(meme => meme.ApplicationUser).ToList();
+            var model = dbContext.Memes.Include(meme => meme.ApplicationUser).Include(meme => meme.XdPoints).ToList();
             foreach (var meme in model)
             {
                 if (dbContext.XdPoints
@@ -91,7 +91,7 @@ namespace memiarzeEu.Controllers
         public async Task<IActionResult> RandomMeme()
         {
             // TODO Understand randomizer.
-            var model = await dbContext.Memes.OrderBy(r => Guid.NewGuid()).Take(1).FirstAsync();
+            var model = await dbContext.Memes.OrderBy(r => Guid.NewGuid()).Take(1).Include(meme => meme.ApplicationUser).Include(meme => meme.XdPoints).FirstAsync();
             if (dbContext.XdPoints.Where(a => a.ApplicationUser.UserName == User.Identity.Name)
                                   .Where(b => b.MemeId == model.Id).Any())
             {

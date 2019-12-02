@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using memiarzeEu.Data;
 
-namespace memiarzeEu.Data.Migrations
+namespace memiarzeEu.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191201130521_UserAvatars")]
-    partial class UserAvatars
+    [Migration("20191202194932_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,20 +46,6 @@ namespace memiarzeEu.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "eab0c728-3138-4d2f-868c-fd412d15dc05",
-                            ConcurrencyStamp = "dd55ff16-6976-4e52-aed1-9d8ecbbe05a0",
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = "896a7d77-0f92-4eaf-87b2-0edb481aaa3f",
-                            ConcurrencyStamp = "6d5446e0-e40e-4c98-8b71-21abddb8695e",
-                            Name = "User"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -178,7 +164,7 @@ namespace memiarzeEu.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("AvatarLink")
+                    b.Property<string>("AvatarPath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -254,7 +240,7 @@ namespace memiarzeEu.Data.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ImageLink")
+                    b.Property<string>("ImagePath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -346,17 +332,19 @@ namespace memiarzeEu.Data.Migrations
                 {
                     b.HasOne("memiarzeEu.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Memes")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("memiarzeEu.Models.XdPoint", b =>
                 {
                     b.HasOne("memiarzeEu.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId");
+                        .WithMany("XdPoints")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("memiarzeEu.Models.Meme", "Meme")
-                        .WithMany()
+                        .WithMany("XdPoints")
                         .HasForeignKey("MemeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

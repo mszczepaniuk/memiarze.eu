@@ -18,6 +18,7 @@ namespace memiarzeEu.Models
         public DateTime CreationDate { get; set; }
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+        public ICollection<XdPoint> XdPoints { get; set; }
 
         [NotMapped]
         public bool IsXdClicked { get; set; } = false;

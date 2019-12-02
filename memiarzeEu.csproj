@@ -12,6 +12,8 @@
     <Compile Remove="Data\Migrations\20191130210221_InitialMigration.Designer.cs" />
     <Compile Remove="Data\Migrations\20191202152034_test.cs" />
     <Compile Remove="Data\Migrations\20191202152034_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191202194444_InitialMigration2.cs" />
+    <Compile Remove="Data\Migrations\20191202194444_InitialMigration2.Designer.cs" />
   </ItemGroup>
 
 
@@ -27,6 +29,7 @@
 
 
   <ItemGroup>
+    <Folder Include="Data\Migrations\" />
     <Folder Include="wwwroot\img\memes\" />
     <Folder Include="wwwroot\img\avatars\" />
   </ItemGroup>

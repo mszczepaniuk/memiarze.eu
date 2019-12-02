@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using memiarzeEu.Data;
 
-namespace memiarzeEu.Data.Migrations
+namespace memiarzeEu.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191202155409_XdPointsToUsers")]
-    partial class XdPointsToUsers
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -344,7 +342,7 @@ namespace memiarzeEu.Data.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("memiarzeEu.Models.Meme", "Meme")
-                        .WithMany()
+                        .WithMany("XdPoints")
                         .HasForeignKey("MemeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

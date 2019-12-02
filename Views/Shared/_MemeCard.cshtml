@@ -3,9 +3,10 @@
     var imagePath = $"/img/memes/{System.Uri.EscapeDataString(Model.ImagePath)}";
     var dateText = Model.CreationDate.ToString("MM/dd/yyyy HH:mm");
     var authorName = Model.ApplicationUser == null ? "Usuniete konto" : Model.ApplicationUser.UserName;
+    var xDpoints = Model.XdPoints.Count;
 }
 <div class="card mt-2 mb-2">
-    <div class="card-header">@Model.Title</div>
+    <div class="card-header" style="font-weight: bold;">@Model.Title</div>
     <div class="card-body p-0">
         <img class="card-img m-0" src=@imagePath />
     </div>
@@ -13,7 +14,8 @@
         <div class="row">
             <div class="col-8">
                 @dateText
-                , <a asp-action="Index" asp-controller="Account" asp-route-id=@Model.ApplicationUserId style="text-decoration: none; color: black;">@authorName</a>
+                || <a asp-action="Index" asp-controller="Account" asp-route-id=@Model.ApplicationUserId style="text-decoration: none; color: black;">@authorName</a>
+                || @xDpoints
             </div>
             <div class="col-4 ml-auto">
                 @if (Model.IsXdClicked)
@@ -31,9 +33,9 @@
                 }
                 @if ((User.IsInRole("Admin")) || ((User.Identity.Name != null) && (User.Identity.Name == Model.ApplicationUser.UserName)))
                 {
-                <form method="post" asp-action="DeleteMeme" asp-route-id=@Model.Id>
-                    <button type="submit" style="text-decoration: none; color: black; font-weight: bold;" class="btn-danger float-right mr-2">Usun</button>
-                </form>
+                    <form method="post" asp-action="DeleteMeme" asp-route-id=@Model.Id>
+                        <button type="submit" style="text-decoration: none; color: black; font-weight: bold;" class="btn-danger float-right mr-2">Usun</button>
+                    </form>
                 }
             </div>
         </div>
