@@ -5,7 +5,7 @@
     var authorName = Model.ApplicationUser == null ? "Usuniete konto" : Model.ApplicationUser.UserName;
     var xDpoints = Model.XdPoints.Count;
 }
-<div class="card">
+<div class="card mb-3">
     <div class="card-header" style="font-weight: bold;">@Model.Title</div>
     <div class="card-body p-0">
         <img class="card-img m-0" src=@imagePath />
@@ -34,7 +34,7 @@
                 @if ((User.IsInRole("Admin")) || ((User.Identity.Name != null) && (User.Identity.Name == Model.ApplicationUser.UserName)))
                 {
                     <form method="post" asp-controller="Home" asp-action="DeleteMeme" asp-route-id=@Model.Id>
-                        <button type="submit" style="text-decoration: none; color: black; font-weight: bold;" class="btn-danger float-right mr-2">Usun</button>
+                        <button type="submit" style="text-decoration: none; color: black; font-weight: bold;" class="btn-danger float-right mr-2" onclick="return confirm('Czy na pewno chcesz usunac ten obrazek?')">Usun</button>
                     </form>
                 }
             </div>
