@@ -100,6 +100,41 @@ namespace memiarzeEu.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AwardXdPoint(int id)
+        {
+            var user = await userManager.FindByNameAsync(User.Identity.Name);
+            var query = dbContext.XdPoints.Any(x => ((x.ApplicationUserId == user.Id) && (x.MemeId == id)));
+            if (!query)
+            {
+                var xDpoint = new XdPoint()
+                {
+                    ApplicationUserId = user.Id,
+                    MemeId = id,
+                    
+                };
+                dbContext.XdPoints.Add(xDpoint);
+                dbContext.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> RemoveXdPoint(int id)
+        {
+            var user = await userManager.FindByNameAsync(User.Identity.Name);
+            var query = dbContext.XdPoints.Where(m => m.MemeId == id).Where(u => u.ApplicationUserId == user.Id);
+            if (query.Any())
+            {
+                var xDpoint = query.First();
+                dbContext.Remove(xDpoint);
+                dbContext.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
