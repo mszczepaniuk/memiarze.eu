@@ -11,17 +11,7 @@
         {
             foreach (var meme in Model)
             {
-                var imagePath = $"/img/memes/{System.Uri.EscapeDataString(meme.ImagePath)}";
-                var dateText = meme.CreationDate.ToString("MM/dd/yyyy HH:mm");
-                var authorName = meme.ApplicationUser == null ? "Usuniete konto" : meme.ApplicationUser.UserName;
-
-                <div class="card mt-2 mb-2">
-                    <div class="card-header">@meme.Title</div>
-                    <div class="card-body">
-                        <img class="card-img" src=@imagePath />
-                    </div>
-                    <div class="card-footer">@authorName, @dateText</div>
-                </div>
+                @await Html.PartialAsync("_MemeCard", meme)
             }
         }
     </div>

@@ -1,18 +1,6 @@
 ﻿@model Meme
-@{
-    var imagePath = $"/img/memes/{System.Uri.EscapeDataString(Model.ImagePath)}";
-    var dateText = Model.CreationDate.ToString("MM/dd/yyyy HH:mm");
-    var authorName = Model.ApplicationUser == null ? "Usuniete konto" : Model.ApplicationUser.UserName;
-}
-
 <div class="row">
     <div class="col-md-6">
-        <div class="card mt-2 mb-2">
-            <div class="card-header">@Model.Title</div>
-            <div class="card-body">
-                <img class="card-img" src=@imagePath />
-            </div>
-            <div class="card-footer">@authorName, @dateText</div>
-        </div>
+        @await Html.PartialAsync("_MemeCard", Model)
     </div>
 </div>
