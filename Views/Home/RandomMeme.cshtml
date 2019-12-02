@@ -1,6 +1,36 @@
 ﻿@model Meme
+@{
+    var imagePath = $"/img/memes/{System.Uri.EscapeDataString(Model.ImagePath)}";
+    var dateText = Model.CreationDate.ToString("MM/dd/yyyy HH:mm");
+    var authorName = Model.ApplicationUser == null ? "Usuniete konto" : Model.ApplicationUser.UserName;
+}
 <div class="row">
     <div class="col-md-6 offset-md-3">
-        @await Html.PartialAsync("_MemeCard", Model)
+        <div class="card mt-2 mb-2">
+            <div class="card-header">@Model.Title</div>
+            <div class="card-body p-0">
+                <img class="card-img m-0" src=@imagePath />
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-8">
+                        @dateText
+                        , <a asp-action="Index" asp-controller="Account" asp-route-id=@Model.ApplicationUserId style="text-decoration: none; color: black;">@authorName</a>
+                    </div>
+                    <div class="col-4 ml-auto">
+                        @if (Model.IsXdClicked)
+                        {
+                            <input hidden asp-for=@Model.Id>
+                            <a style="text-decoration: none; color: black; font-weight: bold;">xD!</a>
+                        }
+                        else
+                        {
+                            <input hidden asp-for=@Model.Id>
+                            <button type="submit" style="text-decoration: none; color: black;">xD</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
