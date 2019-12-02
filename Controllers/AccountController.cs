@@ -83,8 +83,9 @@ namespace memiarzeEu.Controllers
 
         public async Task<IActionResult> Index(string id)
         {
-            if (id == null) return View("NotFound");
-            return View(new AccountIndexViewModel { ProfileOwner = await userManager.FindByIdAsync(id) });
+            var model = await userManager.FindByIdAsync(id);
+            if (model == null) return View("NotFound");
+            return View(model);
         }
 
         // TODO: Check authorization.
@@ -108,41 +109,41 @@ namespace memiarzeEu.Controllers
         [Authorize]
         public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
-            if (model.Avatar == null)
-            {
-                ModelState.AddModelError("", "Prosze wybrac zdjecie");
-                return View(model);
-            }
-
             if (ModelState.IsValid)
             {
-                string uploadsFolder = Path.Combine(hostEnvironment.ContentRootPath, "wwwroot", "img", "avatars");
-                string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Avatar.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    model.Avatar.CopyTo(fileStream);
-                }
-
                 var user = await userManager.FindByIdAsync(model.Id);
-                if ((user.AvatarPath != null) && (System.IO.File.Exists(Path.Combine(uploadsFolder, user.AvatarPath))))
+                user.AvatarPath = model.CurrentAvatarPath;
+                if (model.Avatar != null)
                 {
-                    string oldAvatarPath = Path.Combine(uploadsFolder, user.AvatarPath);
-                    System.IO.File.Delete(oldAvatarPath);
+                    string uploadsFolder = Path.Combine(hostEnvironment.ContentRootPath, "wwwroot", "img", "avatars");
+                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Avatar.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        model.Avatar.CopyTo(fileStream);
+                    }
+
+                    if ((user.AvatarPath != null) && (System.IO.File.Exists(Path.Combine(uploadsFolder, user.AvatarPath))))
+                    {
+                        string oldAvatarPath = Path.Combine(uploadsFolder, user.AvatarPath);
+                        System.IO.File.Delete(oldAvatarPath);
+                    }
+
+                    user.AvatarPath = uniqueFileName;
                 }
 
-                user.AvatarPath = uniqueFileName;
                 user.About = model.About;
                 var result = await userManager.UpdateAsync(user);
+
                 if (!result.Succeeded)
                 {
                     ModelState.AddModelError("", "Cos poszlo nie tak podczas aktualizowania zdjecia");
                     return View(model);
                 }
 
-                return View($"Account/Index/{model.Id}");
+                return RedirectToAction("Index", "Account", new { id = model.Id });
             }
-            ModelState.AddModelError("", "Cos poszlo nie tak podczas dodawania zdjecia");
+            ModelState.AddModelError("", "Cos poszlo nie tak");
             return View(model);
         }
 
