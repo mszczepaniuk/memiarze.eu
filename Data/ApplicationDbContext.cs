@@ -25,6 +25,10 @@ namespace memiarzeEu.Data
                 .HasOne(b => b.ApplicationUser)
                 .WithMany(a => a.Memes)
                 .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<XdPoint>()
+                .HasOne(b => b.ApplicationUser)
+                .WithMany(a => a.XdPoints)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

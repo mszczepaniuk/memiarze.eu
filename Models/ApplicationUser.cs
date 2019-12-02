@@ -10,6 +10,7 @@ namespace memiarzeEu.Models
     public class ApplicationUser : IdentityUser
     {
         public ICollection<Meme> Memes { get; set; }
+        public ICollection<XdPoint> XdPoints { get; set; }
         [Required]
         public DateTime JoinDate { get; set; }
         [MaxLength(100)]

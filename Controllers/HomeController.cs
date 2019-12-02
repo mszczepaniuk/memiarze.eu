@@ -135,6 +135,16 @@ namespace memiarzeEu.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public IActionResult DeleteMeme(int id)
+        {
+            var meme = dbContext.Memes.Find(id);
+            if (meme == null) return View("NotFound");
+            dbContext.Memes.Remove(meme);
+            dbContext.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

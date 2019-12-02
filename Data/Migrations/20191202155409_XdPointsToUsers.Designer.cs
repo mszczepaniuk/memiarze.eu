@@ -10,8 +10,8 @@ using memiarzeEu.Data;
 namespace memiarzeEu.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191202152034_test")]
-    partial class test
+    [Migration("20191202155409_XdPointsToUsers")]
+    partial class XdPointsToUsers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -339,8 +339,9 @@ namespace memiarzeEu.Data.Migrations
             modelBuilder.Entity("memiarzeEu.Models.XdPoint", b =>
                 {
                     b.HasOne("memiarzeEu.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId");
+                        .WithMany("XdPoints")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("memiarzeEu.Models.Meme", "Meme")
                         .WithMany()

@@ -337,8 +337,9 @@ namespace memiarzeEu.Data.Migrations
             modelBuilder.Entity("memiarzeEu.Models.XdPoint", b =>
                 {
                     b.HasOne("memiarzeEu.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId");
+                        .WithMany("XdPoints")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("memiarzeEu.Models.Meme", "Meme")
                         .WithMany()
