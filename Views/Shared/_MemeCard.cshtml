@@ -20,20 +20,20 @@
             <div class="col-4 ml-auto">
                 @if (Model.IsXdClicked)
                 {
-                    <form method="post" asp-action="RemoveXdPoint" asp-route-id=@Model.Id>
+                    <form method="post" asp-controller="Home" asp-action="RemoveXdPoint" asp-route-id=@Model.Id>
                         <button type="submit" style="text-decoration: none; color: black; font-weight: bold;" class="float-right">xD!</button>
                     </form>
                 }
                 else
                 {
 
-                    <form method="post" asp-action="AwardXdPoint" asp-route-id=@Model.Id>
+                    <form method="post" asp-controller="Home" asp-action="AwardXdPoint" asp-route-id=@Model.Id>
                         <button type="submit" style="text-decoration: none; color: black;" class="float-right">xD</button>
                     </form>
                 }
                 @if ((User.IsInRole("Admin")) || ((User.Identity.Name != null) && (User.Identity.Name == Model.ApplicationUser.UserName)))
                 {
-                    <form method="post" asp-action="DeleteMeme" asp-route-id=@Model.Id>
+                    <form method="post" asp-controller="Home" asp-action="DeleteMeme" asp-route-id=@Model.Id>
                         <button type="submit" style="text-decoration: none; color: black; font-weight: bold;" class="btn-danger float-right mr-2">Usun</button>
                     </form>
                 }
