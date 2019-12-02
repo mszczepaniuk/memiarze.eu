@@ -1,6 +1,6 @@
 ﻿@model Meme
 @{
-    var imagePath = $"/img/avatars/{System.Uri.EscapeDataString(Model.ImagePath)}";
+    var imagePath = $"/img/memes/{System.Uri.EscapeDataString(Model.ImagePath)}";
     var dateText = Model.CreationDate.ToString("MM/dd/yyyy HH:mm");
     var authorName = Model.ApplicationUser == null ? "Usuniete konto" : Model.ApplicationUser.UserName;
 }
@@ -14,6 +14,5 @@
             </div>
             <div class="card-footer">@authorName, @dateText</div>
         </div>
-        }
     </div>
 </div>
