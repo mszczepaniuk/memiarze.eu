@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using memiarzeEu.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -33,6 +34,7 @@ namespace memiarzeEu
             using (var scope = host.Services.CreateScope())
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
                 if (!roleManager.RoleExistsAsync("User").Result)
                 {
@@ -42,6 +44,13 @@ namespace memiarzeEu
                 if (!roleManager.RoleExistsAsync("Admin").Result)
                 {
                     await roleManager.CreateAsync(new IdentityRole { Name = "Admin" });
+                }
+
+                if (userManager.FindByNameAsync("admin").Result == null)
+                {
+                    var user = new ApplicationUser { UserName = "admin" };
+                    await userManager.CreateAsync(user, "admin123");
+                    await userManager.AddToRoleAsync(user, "Admin");
                 }
             }
         }
