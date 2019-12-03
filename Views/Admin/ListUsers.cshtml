@@ -1,0 +1,43 @@
+﻿@model ICollection<ApplicationUser>
+@{
+    ViewBag.Title = "Lista uzytkownikow";
+}
+
+
+@if (Model.Any())
+{
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Nazwa uzytkownika</th>
+                <th scope="col">Nadaj uprawnienia</th>
+                <th scope="col">Usun konto</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+            <tr>
+                <td><a asp-action="Index" asp-controller="Account" asp-route-id=@user.Id style="text-decoration: none; color: black;">@user.UserName</a></td>
+                <td>
+                    <form method="post" asp-action="AddAdminRole" asp-controller="Admin" asp-route-id="@user.Id">
+                        <button class="btn btn-primary" type="submit" onclick="return confirm('Czy na pewno chcesz nadac uprawnienia dla: @user.UserName')">Daj admina</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" asp-action="DeleteUser" asp-controller="Account" asp-route-id="@user.Id">
+                        <button class="btn btn-danger" type="submit" onclick="return confirm('Czy na pewno chcesz usunac konto: @user.UserName')">Usun konto</button>
+                    </form>
+                </td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+}
+else
+{
+    <h1>Brak administratorów</h1>
+    <p>Jak sie tu znalazles?</p>
+}

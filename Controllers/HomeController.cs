@@ -91,6 +91,7 @@ namespace memiarzeEu.Controllers
         {
             // TODO Understand randomizer.
             var model = await dbContext.Memes.OrderBy(r => Guid.NewGuid()).Take(1).Include(meme => meme.ApplicationUser).Include(meme => meme.XdPoints).FirstAsync();
+            if (model == null) return NotFound();
             if (dbContext.XdPoints.Where(a => a.ApplicationUser.UserName == User.Identity.Name)
                                   .Where(b => b.MemeId == model.Id).Any())
             {

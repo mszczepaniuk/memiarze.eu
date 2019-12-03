@@ -17,7 +17,7 @@ namespace memiarzeEu
         public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            await SeedRoleData(host);
+            //await SeedRoleData(host);
             await host.RunAsync();
         }
 

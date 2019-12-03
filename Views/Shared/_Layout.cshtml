@@ -28,8 +28,12 @@
                         </li>
                         @if (User.IsInRole("Admin"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index">Admin</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDrop" data-toggle="dropdown">Admin</a>
+                                <div class="dropdown dropdown-menu">
+                                    <a class="dropdown-item" asp-action="ListAdmins" asp-controller="Admin">Admini</a>
+                                    <a class="dropdown-item" asp-action="ListUsers" asp-controller="Admin">Uzytkownicy</a>
+                                </div>
                             </li>
                         }
                     </ul>
