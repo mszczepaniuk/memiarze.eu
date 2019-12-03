@@ -159,7 +159,7 @@ namespace memiarzeEu.Controllers
             var user = await userManager.FindByIdAsync(id);
             if (user == null) return View("NotFound");
             await userManager.DeleteAsync(user);
-            return View("../Home/Index");
+            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> TopCarousel(string id)
