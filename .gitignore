@@ -338,3 +338,7 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Avatars, except default one
+wwwroot/img/avatars/*
+!wwwroot/img/avatars/default.png
