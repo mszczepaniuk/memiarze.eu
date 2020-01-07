@@ -4,9 +4,12 @@ End of term project assignment for Web Application Development (pol. *Programowa
 
 ## Getting started
 
+### Requirements
+
 Version of Visual Studio capable of running ASP.NET Core 3.0 application.
 
-Test user credentials:
+### Test user credentials
+
 Username - admin
 Password - admin123
 
