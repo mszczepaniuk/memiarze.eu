@@ -342,3 +342,9 @@ healthchecksdb
 # Avatars, except default one
 wwwroot/img/avatars/*
 !wwwroot/img/avatars/default.png
+
+# Bootstrap and jquery
+src/Web/wwwroot/lib/bootstrap/
+src/Web/wwwroot/lib/jquery/
+src/Web/wwwroot/lib/jquery-validation/
+src/Web/wwwroot/lib/jquery-validation-unobtrusive/
