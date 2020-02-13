@@ -1,0 +1,51 @@
+﻿@model ICollection<Meme>
+@{
+    ViewBag.Title = "Glowna";
+    int previousPage;
+    int nextPage;
+    if (ViewBag.CurrentPage <= 1)
+    {
+        previousPage = 1;
+    }
+    else
+    {
+        previousPage = ViewBag.CurrentPage - 1;
+    }
+    if (ViewBag.CurrentPage >= ViewBag.Pages)
+    {
+        nextPage = ViewBag.Pages;
+    }
+    else
+    {
+        nextPage = ViewBag.CurrentPage + 1;
+    }
+}
+<div class="row">
+    <div class="col-md-3">
+        <a class="btn btn-primary btn-block text-center mt-2 mb-2" asp-action="AddMeme" asp-controller="Home" role="button">Dodaj</a>
+    </div>
+    <div class="col-md-6">
+        @if (Model.Any())
+        {
+            foreach (var meme in Model)
+            {
+                @await Html.PartialAsync("_MemeCard", meme)
+            }
+        }
+    </div>
+</div>
+<div class="d-flex justify-content-center">
+    <form asp-action="Index" asp-controller="Home">
+        <button type="submit" style="text-decoration: none; color: black; font-weight: bold;" class="btn-primary">&lt; &lt;</button>
+    </form>
+    <form asp-action="Index" asp-controller="Home" asp-route-page=@previousPage>
+        <button type="submit" style="text-decoration: none; color: black; font-weight: bold;" class="btn-primary">&lt;</button>
+    </form>
+    <a style="font-weight: bold">@ViewBag.CurrentPage</a>
+    <form asp-action="Index" asp-controller="Home" asp-route-page=@nextPage>
+        <button type="submit" style="text-decoration: none; color: black; font-weight: bold;" class="btn-primary">&gt;</button>
+    </form>
+    <form asp-action="Index" asp-controller="Home" asp-route-page=@ViewBag.Pages>
+        <button type="submit" style="text-decoration: none; color: black; font-weight: bold;" class="btn-primary">&gt; &gt;</button>
+    </form> 
+</div>
