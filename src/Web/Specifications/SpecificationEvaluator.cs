@@ -33,7 +33,7 @@ namespace memiarzeEu.Specifications
 
             if (specification.Page > 0 && specification.ResultsPerPage > 0)
             {
-                query = query.Take(specification.ResultsPerPage).Skip((specification.Page - 1) * specification.ResultsPerPage);
+                query = query.Skip((specification.Page - 1) * specification.ResultsPerPage).Take(specification.ResultsPerPage);
             }
 
             return query;

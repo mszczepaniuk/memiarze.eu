@@ -28,6 +28,11 @@ namespace IntegrationTests.Repositories
             SeedData();
         }
 
+        ~MemeRepositoryWithoutSpecification()
+        {
+            dbContext.Database.EnsureDeleted();
+        }
+
         [Fact]
         public async Task GetById()
         {

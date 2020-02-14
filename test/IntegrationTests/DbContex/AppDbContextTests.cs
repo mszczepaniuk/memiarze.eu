@@ -25,6 +25,11 @@ namespace IntegrationTests.DbContext
             dbContext.SaveChanges();
         }
 
+        ~AppDbContextTests()
+        {
+            dbContext.Database.EnsureDeleted();
+        }
+
         [Fact]
         public void AutomaticCreationDate()
         {
