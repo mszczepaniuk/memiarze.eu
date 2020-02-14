@@ -1,6 +1,7 @@
 using memiarzeEu.Data;
 using memiarzeEu.Interfaces;
 using memiarzeEu.Models;
+using memiarzeEu.Specifications;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,15 +10,15 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace IntegrationTests
+namespace IntegrationTests.Repositories
 {
     // Testing EfRepository<T> without specifications is useless. I consider creating those tests as a training for me.
-    public class EfRepositoryWithoutSpecification
+    public class MemeRepositoryWithoutSpecification
     {
         private ApplicationDbContext dbContext;
         private EfRepository<Meme> memeRepo;
 
-        public EfRepositoryWithoutSpecification()
+        public MemeRepositoryWithoutSpecification()
         {
             var dbOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: "TestingDB1")
@@ -52,7 +53,7 @@ namespace IntegrationTests
         {
             var expected = dbContext.Memes.Count();
 
-            var result = await memeRepo.CountAsync(new MockSpecification());
+            var result = await memeRepo.CountAsync(new BaseSpecification<Meme>());
 
             Assert.Equal(expected, result);
         }
@@ -120,26 +121,6 @@ namespace IntegrationTests
             };
             dbContext.AddRange(mockMemes);
             dbContext.SaveChanges();
-        }
-
-        private class MockSpecification : ISpecification<Meme>
-        {
-            public MockSpecification()
-            {
-                
-            }
-
-            public Expression<Func<Meme, bool>> Criteria { get; }
-
-            public List<Expression<Func<Meme, object>>> Includes => new List<Expression<Func<Meme, object>>>();
-
-            public Expression<Func<Meme, object>> OrderBy { get; }
-
-            public Expression<Func<Meme, object>> OrderByDescending { get; }
-
-            public int Page { get; }
-
-            public int ResultsPerPage { get; }
         }
     }
 }

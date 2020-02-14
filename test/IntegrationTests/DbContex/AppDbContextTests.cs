@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace IntegrationTests
+namespace IntegrationTests.DbContext
 {
     public class AppDbContextTests
     {

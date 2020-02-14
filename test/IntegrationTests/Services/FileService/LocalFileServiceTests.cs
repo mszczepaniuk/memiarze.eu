@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace IntegrationTests
+namespace IntegrationTests.Services.FileService
 {
     public class LocalFileServiceTests
     {
@@ -24,7 +24,7 @@ namespace IntegrationTests
             localFileService = new LocalFileService();
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
-            fileTestingFolderPath = Path.Combine(projectDirectory, "FileTesting");
+            fileTestingFolderPath = Path.Combine(projectDirectory,"Services","FileService","FileTesting");
             ClearUnnecessaryFiles("Delete");
             ClearUnnecessaryFiles("Save");
         }
