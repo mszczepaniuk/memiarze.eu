@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 
 namespace memiarzeEu.Specifications.XdPointSpec
 {
-    public class MemeXdPointConcreteUserIdAndMemeIdSpec : BaseSpecification<MemeXdPoint>
+    public class MemeXdPointConcreteUserIdAndMemeIdSpec : BaseXdPointUserIdAndMemeId<MemeXdPoint>
     {
-        private readonly string userId;
-        private readonly int memeId;
-
-        public MemeXdPointConcreteUserIdAndMemeIdSpec(string userId, int memeId)
+        public MemeXdPointConcreteUserIdAndMemeIdSpec(string userId, int memeId) : base(userId, memeId)
         {
-            this.userId = userId;
-            this.memeId = memeId;
+
         }
-        public override List<Expression<Func<MemeXdPoint, bool>>> Criterias => new List<Expression<Func<MemeXdPoint, bool>>> { x => x.UserId == userId, x => x.MemeId == memeId };
+        public MemeXdPointConcreteUserIdAndMemeIdSpec()
+        {
+
+        }
+
+        public override List<Expression<Func<MemeXdPoint, bool>>> Criterias => new List<Expression<Func<MemeXdPoint, bool>>> { x => x.UserId == UserId, x => x.MemeId == Id };
     }
 }

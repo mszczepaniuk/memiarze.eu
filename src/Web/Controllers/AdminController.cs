@@ -36,20 +36,20 @@ namespace memiarzeEu.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ListUsers()
-        {
-            var model = new List<ApplicationUser>();
-            var adminRoleId = dbContext.Roles.Single(a => a.NormalizedName == "ADMIN").Id;
-            foreach (var user in dbContext.Users.ToList())
-            {
-                if (!dbContext.UserRoles.Where(a => a.UserId == user.Id).Any(a => a.RoleId == adminRoleId))
-                {
-                    model.Add(user);
-                }
-            }
-            return View(model);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> ListUsers()
+        //{
+        //    var model = new List<ApplicationUser>();
+        //    var adminRoleId = dbContext.Roles.Single(a => a.NormalizedName == "ADMIN").Id;
+        //    foreach (var user in dbContext.Users.ToList())
+        //    {
+        //        if (!dbContext.UserRoles.Where(a => a.UserId == user.Id).Any(a => a.RoleId == adminRoleId))
+        //        {
+        //            model.Add(user);
+        //        }
+        //    }
+        //    return View(model);
+        //}
 
         [HttpPost]
         public async Task<IActionResult> AddAdminRole(string id)

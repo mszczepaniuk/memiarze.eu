@@ -4,7 +4,8 @@
 
 }
 <div class="row">
-    <div class="col-md-6 offset-3">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
         @await Html.PartialAsync("_MemeCard", Model.MemeCardViewModel)
         <div class="container">
             <form id="commentForm" asp-controller="Home" asp-action="AddComment" asp-route-memeId="@Model.MemeCardViewModel.Id">
@@ -25,5 +26,5 @@
 </div>
 @section scripts{
     <script src="~/js/SingleMemeView.js"></script>
- }
+}
 

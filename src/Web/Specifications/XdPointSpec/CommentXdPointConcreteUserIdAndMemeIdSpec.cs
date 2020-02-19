@@ -7,16 +7,18 @@ using System.Threading.Tasks;
 
 namespace memiarzeEu.Specifications.XdPointSpec
 {
-    public class CommentXdPointConcreteUserIdAndMemeIdSpec : BaseSpecification<CommentXdPoint>
+    public class CommentXdPointConcreteUserIdAndMemeIdSpec : BaseXdPointUserIdAndMemeId<CommentXdPoint>
     {
-        private readonly string userId;
-        private readonly int commentId;
-
-        public CommentXdPointConcreteUserIdAndMemeIdSpec(string userId, int commentId)
+        public CommentXdPointConcreteUserIdAndMemeIdSpec(string userId, int commentId) : base(userId, commentId)
         {
-            this.userId = userId;
-            this.commentId = commentId;
+            
         }
-        public override List<Expression<Func<CommentXdPoint, bool>>> Criterias => new List<Expression<Func<CommentXdPoint, bool>>> { x => x.UserId == userId, x => x.CommentId == commentId };
+
+        public CommentXdPointConcreteUserIdAndMemeIdSpec()
+        {
+
+        }
+
+        public override List<Expression<Func<CommentXdPoint, bool>>> Criterias => new List<Expression<Func<CommentXdPoint, bool>>> { x => x.UserId == UserId, x => x.CommentId == Id };
     }
 }

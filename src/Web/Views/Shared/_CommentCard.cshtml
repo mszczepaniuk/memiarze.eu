@@ -30,14 +30,14 @@
                 </form>
             }
             <p class="ml-auto">
-                @Model.XdPoints ||
+                <a id="commentCardPoints_@Model.Id">@Model.XdPoints</a> ||
                 @if (Model.IsXdClicked)
                 {
-                    <a id="commentCard_@Model.Id" style="text-decoration: none; color: black; font-weight: bold; cursor: pointer;">xD!</a>
+                    <a id="commentCard_@Model.Id" class="removeCommentPoint" style="text-decoration: none; color: black; font-weight: bold; cursor: pointer;">xD!</a>
                 }
                 else
                 {
-                    <a id="commentCard_@Model.Id" style="text-decoration: none; color: black; cursor: pointer;">xD</a>
+                    <a id="commentCard_@Model.Id" class="awardCommentPoint" style="text-decoration: none; color: black; cursor: pointer;">xD</a>
                 }
             </p>
         </div>
