@@ -16,62 +16,92 @@ namespace IntegrationTests.Services.FileService
 {
     public class LocalFileServiceTests
     {
-        private LocalFileService localFileService;
         private string fileTestingFolderPath;
+        private LocalMemeFileService memeFileService;
+        private LocalAvatarFileService avatarFileService;
 
         public LocalFileServiceTests()
         {
-            localFileService = new LocalFileService();
-            string workingDirectory = Environment.CurrentDirectory;
-            string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
-            fileTestingFolderPath = Path.Combine(projectDirectory,"Services","FileService","FileTesting");
-            ClearUnnecessaryFiles("Delete");
-            ClearUnnecessaryFiles("Save");
+            var directoryPath = "PUT YOUR LOCAL PATH HERE \\memiarzeEu\\src\\Web\\wwwroot\\img";
+            fileTestingFolderPath = Path.Combine(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName,"Services","FileService","test.jpg");
+            memeFileService = new LocalMemeFileService(directoryPath);
+            avatarFileService = new LocalAvatarFileService(directoryPath);
         }
 
         [Fact]
-        public void SaveInDirectory_testjpgToSaveFolder()
+        public void MemeFileService_Save()
         {
+            SaveTest(memeFileService);
+        }
+
+        [Fact]
+        public void AvatarFileService_Save()
+        {
+            SaveTest(avatarFileService);
+        }
+
+        [Fact]
+        public void MemeFileService_Delete()
+        {
+            DeleteTest(memeFileService);
+        }
+
+        [Fact]
+        public void AvatarFileService_Delete()
+        {
+            DeleteTest(avatarFileService);
+        }
+
+        private void SaveTest(IFileService fileService)
+        {
+            string fileName;
             Stream file;
-            using (file = File.OpenRead(Path.Combine(fileTestingFolderPath, "test.jpg")))
+            using (file = File.OpenRead(fileTestingFolderPath))
             {
                 IFormFile formFile = new FormFile(file, 0, 0, "test", "test.jpg");
-                var directoryPath = Path.Combine(fileTestingFolderPath, "Save");
-
-                localFileService.SaveInDirectory(formFile, directoryPath);
+                fileName = Path.GetFileName(fileService.Save(formFile));
             }
+            bool doesFileExists = File.Exists(Path.Combine(fileService.DirectoryFullPath, fileName));
 
-            var fileCount = Directory.GetFiles(Path.Combine(fileTestingFolderPath, "Save")).Length;
+            Assert.True(doesFileExists);
 
-            Assert.True(fileCount == 2);
-            ClearUnnecessaryFiles("Save");
-        }
-
-        [Fact]
-        public void Delete_ToSaveFolder()
-        {
-            var mockFileName = "FakeFile.txt";
-            var filePath = Path.Combine(fileTestingFolderPath, "Delete", mockFileName);
-            File.Create(filePath).Dispose();
-
-            localFileService.Delete(filePath);
-
-            Assert.False(File.Exists(filePath));
-            ClearUnnecessaryFiles("Delete");
-        }
-
-        private void ClearUnnecessaryFiles(string folderName)
-        {
-            var files = Directory.GetFiles(Path.Combine(fileTestingFolderPath, folderName));
-            var gitFilePath = Path.Combine(fileTestingFolderPath, folderName, "GitNoticeMe.txt");
-
-            foreach (var file in files)
+            if (doesFileExists)
             {
-                if (!Equals(file, gitFilePath))
-                {
-                    File.Delete(file);
-                }
+                File.Delete(Path.Combine(fileService.DirectoryFullPath, fileName));
             }
         }
+
+        private void DeleteTest(BaseLocalFileService fileService)
+        {
+            string filePath;
+            Stream file;
+            using (file = File.OpenRead(fileTestingFolderPath))
+            {
+                IFormFile formFile = new FormFile(file, 0, 0, "test", "test.jpg");
+                filePath = fileService.Save(formFile);
+            }
+
+            fileService.Delete(filePath);
+            bool doesFileExists = File.Exists(Path.Combine(fileService.DirectoryFullPath, Path.GetFileName(filePath)));
+
+            Assert.False(doesFileExists);
+
+            if (doesFileExists)
+            {
+                File.Delete(Path.Combine(fileService.DirectoryFullPath, Path.GetFileName(filePath)));
+            }
+        }
+
+        //[Fact]
+        //public void Meme_Delete()
+        //{
+        //    var mockFileName = "FakeFile.txt";
+        //    var filePath = Path.Combine(fileTestingFolderPath, "Delete", mockFileName);
+        //    File.Create(filePath).Dispose();
+
+        //    localFileService.Delete(filePath);
+
+        //    Assert.False(File.Exists(filePath));
+        //}
     }
 }

@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace memiarzeEu.Interfaces
 {
-    public interface IFileService
+    public interface IMemeFileService : IFileService
     {
-        public string Save(IFormFile file);
-        public void Delete(string filePath);
-        public string DirectoryFullPath { get; }
+
     }
 }

@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using memiarzeEu.Models;
 using memiarzeEu.Interfaces;
+using memiarzeEu.Services;
 
 namespace memiarzeEu
 {
@@ -30,6 +31,9 @@ namespace memiarzeEu
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
+            services.AddScoped<IMemeFileService, LocalMemeFileService>();
+            services.AddScoped<IAvatarFileService, LocalAvatarFileService>();
+
             services.AddDbContextPool<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -39,6 +43,7 @@ namespace memiarzeEu
                 options.Password.RequireUppercase = false;
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -69,7 +74,7 @@ namespace memiarzeEu
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{page?}");
             });
         }
     }

@@ -14,10 +14,8 @@ namespace memiarzeEu.Specifications
         {
             var query = inputQuery;
 
-            if (specification.Criteria != null)
-            {
-                query = query.Where(specification.Criteria);
-            }
+            query = specification.Criterias.Aggregate(query,
+                                    (current, include) => current.Where(include));
 
             query = specification.Includes.Aggregate(query,
                                     (current, include) => current.Include(include));

@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 
 namespace memiarzeEu.Specifications.MemeSpec
 {
-    public class PageOfMemesSpec : BaseSpecification<Meme>
+    public class SingleMemeSpec : BaseSpecification<Meme>
     {
-        public PageOfMemesSpec(int page)
-        {
-            Page = page;
-            ResultsPerPage = 10;
-        }
+        private readonly int memeId;
 
+        public SingleMemeSpec(int memeId)
+        {
+            this.memeId = memeId;
+        }
         public override List<Expression<Func<Meme, object>>> Includes => new List<Expression<Func<Meme, object>>> { x => x.User, x => x.XdPoints };
+        public override List<Expression<Func<Meme, bool>>> Criterias => new List<Expression<Func<Meme, bool>>> { x => x.Id == memeId };
     }
 }

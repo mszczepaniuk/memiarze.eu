@@ -16,7 +16,7 @@ namespace memiarzeEu.Models
         public string ImagePath { get; set; }
         public ApplicationUser User { get; set; }
         public string UserId { get; set; }
-        public bool MainPage { get; set; }
+        public List<Comment> Comments { get; set; }
         public List<MemeXdPoint> XdPoints { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime UpdateDate { get; set; }

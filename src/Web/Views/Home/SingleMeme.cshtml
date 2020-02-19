@@ -1,0 +1,29 @@
+﻿@model SingleMemeViewModel
+@{
+    ViewData["Title"] = "Mem";
+
+}
+<div class="row">
+    <div class="col-md-6 offset-3">
+        @await Html.PartialAsync("_MemeCard", Model.MemeCardViewModel)
+        <div class="container">
+            <form id="commentForm" asp-controller="Home" asp-action="AddComment" asp-route-memeId="@Model.MemeCardViewModel.Id">
+                <textarea id="commentInput" class="form-control" type="text" name="text" rows="7" maxlength="300"></textarea>
+                <button type="submit" class="btn btn-primary mt-2 mb-3">Dodaj komentarz</button>
+            </form>
+            <p id="validationError" class="text-left" style="color:red;"></p>
+        </div>
+        @if (Model.CommentViewModels.Any())
+        {
+            foreach (var commentViewModel in Model.CommentViewModels)
+            {
+                @await Html.PartialAsync("_CommentCard", commentViewModel)
+            }
+        }
+        @await Html.PartialAsync("_Pagination", Model.PaginationViewModel)
+    </div>
+</div>
+@section scripts{
+    <script src="~/js/SingleMemeView.js"></script>
+ }
+

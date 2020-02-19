@@ -1,121 +1,212 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Diagnostics;
-//using System.Linq;
-//using System.Threading.Tasks;
-//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.Extensions.Logging;
-//using memiarzeEu.Models;
-//using memiarzeEu.ViewModels;
-//using Microsoft.AspNetCore.Authorization;
-//using System.IO;
-//using Microsoft.Extensions.Hosting;
-//using Microsoft.AspNetCore.Identity;
-//using memiarzeEu.Data;
-//using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using memiarzeEu.Models;
+using memiarzeEu.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using System.IO;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Identity;
+using memiarzeEu.Data;
+using Microsoft.EntityFrameworkCore;
+using memiarzeEu.Interfaces;
+using memiarzeEu.Specifications.MemeSpec;
+using System.Security.Claims;
+using memiarzeEu.Specifications.XdPointSpec;
+using memiarzeEu.Specifications;
+using memiarzeEu.Extensions;
+using memiarzeEu.Specifications.CommentSpec;
 
-//namespace memiarzeEu.Controllers
-//{
-//    public class HomeController : Controller
-//    {
-//        private readonly IHostEnvironment hostEnvironment;
-//        private readonly ApplicationDbContext dbContext;
+namespace memiarzeEu.Controllers
+{
+    public class HomeController : Controller
+    {
+        private readonly IAsyncRepository<Meme> memeRepo;
+        private readonly IAsyncRepository<MemeXdPoint> memeXdPointRepo;
+        private readonly IAsyncRepository<CommentXdPoint> commentXdPointRepo;
+        private readonly IFileService memeFileService;
+        private readonly IAsyncRepository<Comment> commentRepo;
 
+        public HomeController(IAsyncRepository<Meme> memeRepo,
+            IAsyncRepository<MemeXdPoint> memeXdPointRepo,
+            IAsyncRepository<CommentXdPoint> commentXdPointRepo,
+            IMemeFileService memeFileService,
+            IAsyncRepository<Comment> commentRepo)
+        {
+            this.memeRepo = memeRepo;
+            this.memeXdPointRepo = memeXdPointRepo;
+            this.commentXdPointRepo = commentXdPointRepo;
+            this.memeFileService = memeFileService;
+            this.commentRepo = commentRepo;
+        }
 
-//        public HomeController(IHostEnvironment hostEnvironment,
-//            ApplicationDbContext dbContext)
-//        {
-//            this.hostEnvironment = hostEnvironment;
-//            this.dbContext = dbContext;
-//        }
+        [HttpGet]
+        public async Task<IActionResult> Index(int? page)
+        {
+            page ??= new int?(1);
+            int maxNumberOfPages = (await memeRepo.CountAsync(new BaseSpecification<Meme>()) - 1) / 10 + 1;
+            if (maxNumberOfPages == 0) { maxNumberOfPages = 1; }
 
-//        public IActionResult Index(int page)
-//        {
-//            if (page == 0) { page = 1; }
-//            IQueryable<Meme> model = dbContext.Memes.Include(meme => meme.ApplicationUser).Include(meme => meme.XdPoints).OrderByDescending(m => m.CreationDate);
-//            var pages = model.Count() / memesPerPage + 1;
-//            model = model.Skip(memesPerPage * (page - 1)).Take(memesPerPage);
-//            if (page < 1 || page > pages) { return View("NotFound"); }
-//            foreach (var meme in model)
-//            {
-//                if (dbContext.XdPoints
-//                    .Where(a => a.ApplicationUser.UserName == User.Identity.Name)
-//                    .Where(b => b.MemeId == meme.Id).Any())
-//                {
-//                    meme.IsXdClicked = true;
-//                }
-//            }
-//            ViewBag.CurrentPage = page;
-//            ViewBag.Pages = pages;
-//            return View(model.ToList());
-//        }
+            if (page.Value < 1 || page.Value > maxNumberOfPages) { return View("NotFound"); }
 
-//        [HttpGet]
-//        [Authorize]
-//        public IActionResult AddMeme()
-//        {
-//            return View();
-//        }
+            var userId = this.GetCurrentUserId();
 
-//        [HttpPost]
-//        [Authorize]
-//        public async Task<IActionResult> AddMeme(AddMemeViewModel model)
-//        {
-//            if (model.Image == null)
-//            {
-//                ModelState.AddModelError("", "Prosze wybrac zdjecie");
-//                return View(model);
-//            }
+            var memes = await memeRepo.GetAsync(new PageOfMemesOrderedByDateSpec(page.Value));
+            var memeViewModels = new List<MemeCardViewModel>();
 
-//            if (ModelState.IsValid)
-//            {
-//                string uploadsFolder = Path.Combine(hostEnvironment.ContentRootPath, "wwwroot", "img", "memes");
-//                string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
-//                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-//                using (var fileStream = new FileStream(filePath, FileMode.Create))
-//                {
-//                    model.Image.CopyTo(fileStream);
-//                }
-//                Meme meme = new Meme
-//                {
-//                    Title = model.Title,
-//                    ImagePath = uniqueFileName,
-//                    CreationDate = DateTime.Now,
-//                    ApplicationUser = await userManager.GetUserAsync(User),
-//                };
-//                dbContext.Memes.Add(meme);
-//                dbContext.SaveChanges();
-//                return RedirectToAction("index");
-//            }
-//            ModelState.AddModelError("", "Cos poszlo nie tak podczas dodawania zdjecia");
-//            return View(model);
-//        }
+            foreach (var meme in memes)
+            {
+                var userPoint = await memeXdPointRepo.GetAsync(new MemeXdPointConcreteUserIdAndMemeIdSpec(userId, meme.Id));
+                var isXdClicked = userPoint.FirstOrDefault() != null ? true : false;
+                memeViewModels.Add(new MemeCardViewModel(meme, isXdClicked));
+            }
 
-//        public async Task<IActionResult> RandomMeme()
-//        {
-//            var model = await dbContext.Memes.OrderBy(r => Guid.NewGuid()).Take(1).Include(meme => meme.ApplicationUser).Include(meme => meme.XdPoints).FirstAsync();
-//            if (model == null) return NotFound();
-//            if (dbContext.XdPoints.Where(a => a.ApplicationUser.UserName == User.Identity.Name)
-//                                  .Where(b => b.MemeId == model.Id).Any())
-//            {
-//                model.IsXdClicked = true;
-//            }
-//            return View(model);
-//        }
+            var paginationViewModel = new PaginationViewModel()
+            {
+                ActionName = "Index",
+                ControllerName = "Home",
+                CurrentPage = page.Value,
+                MaxNumberOfPages = maxNumberOfPages
+            };
 
-//        [HttpPost]
-//        public IActionResult DeleteMeme(int id)
-//        {
-//            var meme = dbContext.Memes.Find(id);
-//            if (meme == null) return View("NotFound");
-//            dbContext.Memes.Remove(meme);
-//            dbContext.SaveChanges();
-//            return RedirectToAction("Index");
-//        }
+            return View(new IndexViewModel { MemeCardViewModels = memeViewModels, PaginationViewModel = paginationViewModel });
+        }
 
-//        public IActionResult Error()
-//        {
-//            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-//        }
-//    }
-//}
+        [HttpGet]
+        public async Task<IActionResult> SingleMeme(int id, int commentPage)
+        {
+            int maxNumberOfPages = (await commentRepo.CountAsync(new CountCommentsOnMeme(id)) - 1) / 20 + 1;
+            if (maxNumberOfPages == 0) { maxNumberOfPages = 1; }
+
+            if (commentPage < 0 || commentPage > maxNumberOfPages) { return View("NotFound"); }
+
+            var memes = await memeRepo.GetAsync(new SingleMemeSpec(id));
+            var meme = memes.FirstOrDefault();
+
+            if (meme == null) { return View("NotFound"); }
+
+            var userId = this.GetCurrentUserId();
+
+            var memeUserPoint = await memeXdPointRepo.GetAsync(new MemeXdPointConcreteUserIdAndMemeIdSpec(userId, meme.Id));
+            var isMemeXdClicked = memeUserPoint.FirstOrDefault() != null ? true : false;
+
+            var comments = await commentRepo.GetAsync(new PageOfCommentsSingleMemeSpec(commentPage, id));
+            var commentViewModels = new List<CommentViewModel>();
+
+            foreach (var comment in comments)
+            {
+                var userPoint = await commentXdPointRepo.GetAsync(new CommentXdPointConcreteUserIdAndMemeIdSpec(userId, comment.Id));
+                var isXdClicked = userPoint.FirstOrDefault() != null ? true : false;
+                commentViewModels.Add(new CommentViewModel(comment, isXdClicked));
+            }
+
+            var paginationViewModel = new PaginationViewModel()
+            {
+                ActionName = "SingleMeme",
+                ControllerName = "Home",
+                CurrentPage = commentPage,
+                MaxNumberOfPages = maxNumberOfPages,
+                AllRouteData = new Dictionary<string, string> { { "id", meme.Id.ToString() } },
+                AlternativePageName = "commentPage"
+            };
+
+            return View(new SingleMemeViewModel
+            {
+                MemeCardViewModel = new MemeCardViewModel(meme, isMemeXdClicked),
+                CommentViewModels = commentViewModels,
+                PaginationViewModel = paginationViewModel
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RandomMeme()
+        {
+            var memeCount = await memeRepo.CountAsync(new BaseSpecification<Meme>());
+            var memes = await memeRepo.GetAsync(new RandomElementSpec<Meme>(memeCount));
+            var meme = memes.FirstOrDefault();
+
+            if (meme == null) { return View("NotFound"); }
+
+            return RedirectToAction("SingleMeme", new { id = meme.Id, commentPage = 1 });
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult AddMeme()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddMeme(AddMemeViewModel model)
+        {
+            if (model.Image == null)
+            {
+                ModelState.AddModelError("", "Prosze wybrac zdjecie");
+                return View(model);
+            }
+
+            if (ModelState.IsValid)
+            {
+                string imagePath = memeFileService.Save(model.Image);
+                Meme meme = new Meme
+                {
+                    Title = model.Title,
+                    ImagePath = imagePath,
+                    UserId = this.GetCurrentUserId()
+                };
+                await memeRepo.AddAsync(meme);
+                return RedirectToAction("index");
+            }
+
+            ModelState.AddModelError("", "Cos poszlo nie tak podczas dodawania zdjecia");
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> DeleteMeme(int id)
+        {
+            var meme = await memeRepo.GetByIdAsync(id);
+            if (meme == null) return View("NotFound");
+            await memeRepo.DeleteAsync(meme);
+            memeFileService.Delete(meme.ImagePath);
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddComment(string text, int memeId)
+        {
+            if (text.Length > 300) { return (StatusCode(400)); }
+
+            var meme = await memeRepo.GetByIdAsync(memeId);
+            if (meme == null) { return (StatusCode(400)); }
+
+            var comment = new Comment
+            {
+                Text = text,
+                Meme = meme,
+                UserId = this.GetCurrentUserId()
+            };
+            await commentRepo.AddAsync(comment);
+
+            return RedirectToAction("SingleMeme", new { id = memeId, commentPage = 1 });
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            var comment = await commentRepo.GetByIdAsync(id);
+            if (comment == null) return View("NotFound");
+            await commentRepo.DeleteAsync(comment);
+            return RedirectToAction("Index");
+        }
+    }
+}

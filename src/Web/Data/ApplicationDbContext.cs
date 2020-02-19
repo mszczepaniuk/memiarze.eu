@@ -37,6 +37,11 @@ namespace memiarzeEu.Data
                 .WithMany(a => a.Comments)
                 .OnDelete(DeleteBehavior.SetNull);
 
+            modelBuilder.Entity<Comment>()
+                .HasOne(b => b.Meme)
+                .WithMany(a => a.Comments)
+                .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<XdPoint>()
                 .HasOne(b => b.User)
                 .WithMany(a => a.XdPoints)
@@ -47,6 +52,18 @@ namespace memiarzeEu.Data
         }
 
         public override int SaveChanges()
+        {
+            UpdateDates();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            UpdateDates();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        private void UpdateDates()
         {
             var modifiedEntries = ChangeTracker
                 .Entries()
@@ -63,7 +80,6 @@ namespace memiarzeEu.Data
             {
                 ((IEntityCreationDate)entry.Entity).CreationDate = DateTime.Now;
             }
-            return base.SaveChanges();
         }
     }
 }

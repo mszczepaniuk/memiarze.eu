@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -79,13 +80,14 @@ namespace IntegrationTests.Repositories
                     ImagePath = i.ToString()
                 });
             }
-            mockMemes.Add(new Meme
+            dbContext.AddRange(mockMemes);
+            dbContext.SaveChanges();
+            dbContext.Memes.Add(new Meme
             {
                 Title = "0",
                 UserId = "0",
                 ImagePath = "0"
             });
-            dbContext.AddRange(mockMemes);
             dbContext.SaveChanges();
         }
     }

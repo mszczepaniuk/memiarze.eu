@@ -8,6 +8,12 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20200212163523_Rework.cs" />
     <Compile Remove="Data\Migrations\20200212163523_Rework.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200218132143_MemeComment.cs" />
+    <Compile Remove="Data\Migrations\20200218132143_MemeComment.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200218132536_MemeComment.cs" />
+    <Compile Remove="Data\Migrations\20200218132536_MemeComment.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200218132622_MemeComment.cs" />
+    <Compile Remove="Data\Migrations\20200218132622_MemeComment.Designer.cs" />
   </ItemGroup>
 
 

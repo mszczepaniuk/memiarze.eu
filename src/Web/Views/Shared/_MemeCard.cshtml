@@ -1,43 +1,52 @@
-﻿@*@model Meme
+﻿@model MemeCardViewModel
 @{
-    var imagePath = $"/img/memes/{System.Uri.EscapeDataString(Model.ImagePath)}";
-    var dateText = Model.CreationDate.ToString("MM/dd/yyyy HH:mm");
-    var authorName = Model.ApplicationUser == null ? "Usuniete konto" : Model.ApplicationUser.UserName;
-    var xDpoints = Model.XdPoints.Count;
+
 }
 <div class="card mb-3">
-    <div class="card-header" style="font-weight: bold;">@Model.Title</div>
-    <div class="card-body p-0">
-        <img class="card-img m-0" src=@imagePath />
-    </div>
-    <div class="card-footer">
+    <div class="card-header" style="font-weight: bold;">
         <div class="row">
-            <div class="col-8">
-                @dateText
-                || <a asp-action="Index" asp-controller="Account" asp-route-id=@Model.ApplicationUserId style="text-decoration: none; color: black;">@authorName</a>
-                || @xDpoints
-            </div>
-            <div class="col-4 ml-auto">
-                @if (Model.IsXdClicked)
+            <div class="col-6">
+                @if (Model.UserId != null)
                 {
-                    <form method="post" asp-controller="Home" asp-action="RemoveXdPoint" asp-route-id=@Model.Id>
-                        <button type="submit" style="text-decoration: none; color: black; font-weight: bold;" class="float-right">xD!</button>
-                    </form>
+                    <a asp-action="Index" asp-controller="Account" asp-route-id=@Model.UserId style="text-decoration: none; color: black; font-size:10px;">@Model.UserName</a>
                 }
                 else
                 {
-
-                    <form method="post" asp-controller="Home" asp-action="AwardXdPoint" asp-route-id=@Model.Id>
-                        <button type="submit" style="text-decoration: none; color: black;" class="float-right">xD</button>
-                    </form>
-                }
-                @if ((User.IsInRole("Admin")) || ((User.Identity.Name != null) && (User.Identity.Name == Model.ApplicationUser.UserName)))
-                {
-                    <form method="post" asp-controller="Home" asp-action="DeleteMeme" asp-route-id=@Model.Id>
-                        <button type="submit" style="text-decoration: none; color: black; font-weight: bold;" class="btn-danger float-right mr-2" onclick="return confirm('Czy na pewno chcesz usunac ten obrazek?')">Usun</button>
-                    </form>
+                    <p style="font-size:10px;">@Model.UserName</p>
                 }
             </div>
+            <div class="col-6">
+                <p class="text-right" style="font-size:10px;">@Model.CreationDate</p>
+            </div>
+        </div>
+        <div class="row">
+            @Model.Title
         </div>
     </div>
-</div>*@
+    <div class="card-body p-0">
+        <a asp-action="SingleMeme" asp-controller="Home" asp-route-id=@Model.Id asp-route-commentPage="1">
+            <img class="card-img m-0" src=@Model.ImagePath />
+        </a>
+    </div>
+    <div class="card-footer">
+        <div class="row">
+            @if ((User.IsInRole("Admin")) || ((User.Identity.Name != null) && (User.Identity.Name == Model.UserName)))
+            {
+                <form method="post" asp-controller="Home" asp-action="DeleteMeme" asp-route-id=@Model.Id>
+                    <button type="submit" class="btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten obrazek?')">Usuń</button>
+                </form>
+            }
+            <p class="ml-auto">
+                @Model.XdPoints ||
+                @if (Model.IsXdClicked)
+                {
+                    <a id="memeCard_@Model.Id" style="text-decoration: none; color: black; font-weight: bold; cursor: pointer;">xD!</a>
+                }
+                else
+                {
+                    <a id="memeCard_@Model.Id" style="text-decoration: none; color: black; cursor: pointer;">xD</a>
+                }
+            </p>
+        </div>
+    </div>
+</div>

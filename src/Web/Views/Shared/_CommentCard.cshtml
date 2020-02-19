@@ -1,0 +1,45 @@
+﻿@model CommentViewModel
+<div class="card mb-3">
+    <div class="card-header" style="font-weight: bold;">
+        <div class="row">
+            <div class="col-6">
+                <img src=@Model.AvatarPath style="height:50px; width:50px; margin:2px 5px 2px 2px">
+                @if (Model.UserId != null)
+                {
+                    <a asp-action="Index" asp-controller="Account" asp-route-id=@Model.UserId style="text-decoration: none; color: black; font-size:11px;">@Model.UserName</a>
+                }
+                else
+                {
+                    <p style="font-size:11px;">@Model.UserName</p>
+                }
+            </div>
+            <div class="col-6">
+                <p class="text-right" style="font-size:11px;">@Model.CreationDate</p>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <p>@Model.Text</p>
+    </div>
+    <div class="card-footer">
+        <div class="row">
+            @if ((User.IsInRole("Admin")) || ((User.Identity.Name != null) && (User.Identity.Name == Model.UserName)))
+            {
+                <form method="post" asp-controller="Home" asp-action="DeleteComment" asp-route-id=@Model.Id>
+                    <button type="submit" class="btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć ten komentarz?')">Usuń</button>
+                </form>
+            }
+            <p class="ml-auto">
+                @Model.XdPoints ||
+                @if (Model.IsXdClicked)
+                {
+                    <a id="commentCard_@Model.Id" style="text-decoration: none; color: black; font-weight: bold; cursor: pointer;">xD!</a>
+                }
+                else
+                {
+                    <a id="commentCard_@Model.Id" style="text-decoration: none; color: black; cursor: pointer;">xD</a>
+                }
+            </p>
+        </div>
+    </div>
+</div>

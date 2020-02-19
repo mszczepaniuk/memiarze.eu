@@ -1,0 +1,31 @@
+﻿@model PaginationViewModel
+@{
+    int previousPage = Model.CurrentPage - 1;
+    int nextPage = Model.CurrentPage + 1;
+    string pageName = Model.AlternativePageName ?? "page";
+    if (Model.AllRouteData == null)
+    {
+        Model.AllRouteData = new Dictionary<string, string>();
+    }
+    var nextPageRouting = new Dictionary<string, string>(Model.AllRouteData);
+    var previousPageRouting = new Dictionary<string, string>(Model.AllRouteData);
+    nextPageRouting.Add(pageName, nextPage.ToString());
+    previousPageRouting.Add(pageName, previousPage.ToString());
+}
+@if (Model.MaxNumberOfPages > 1)
+{
+    <div class="row">
+        @if (Model.CurrentPage > 1)
+        {
+            <div class="col-1">
+                <a class="btn btn-primary btn-block text-center mt-2 mb-2" style="width:130px" asp-action=@Model.ActionName asp-controller=@Model.ControllerName asp-all-route-data="previousPageRouting">Poprzednia</a>
+            </div>
+        }
+        @if (Model.CurrentPage < Model.MaxNumberOfPages)
+        {
+            <div class="col-1 offset-11">
+                <a class="btn btn-primary float-right btn-block text-center mt-2 mb-2 " style="width:130px" asp-action=@Model.ActionName asp-controller=@Model.ControllerName asp-all-route-data="nextPageRouting">Następna</a>
+            </div>
+        }
+    </div>
+}

@@ -48,7 +48,7 @@ namespace memiarzeEu
 
                 if (userManager.FindByNameAsync("admin").Result == null)
                 {
-                    var user = new ApplicationUser { UserName = "admin" };
+                    var user = new ApplicationUser { UserName = "admin", AvatarPath = "/img/avatars/default.png" };
                     await userManager.CreateAsync(user, "admin123");
                     await userManager.AddToRoleAsync(user, "Admin");
                 }
