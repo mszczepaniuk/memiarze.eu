@@ -145,12 +145,6 @@ namespace memiarzeEu.Controllers
         [Authorize]
         public async Task<IActionResult> AddMeme(AddMemeViewModel model)
         {
-            if (model.Image == null)
-            {
-                ModelState.AddModelError("", "Prosze wybrac zdjecie");
-                return View(model);
-            }
-
             if (ModelState.IsValid)
             {
                 string imagePath = memeFileService.Save(model.Image);
@@ -163,8 +157,6 @@ namespace memiarzeEu.Controllers
                 await memeRepo.AddAsync(meme);
                 return RedirectToAction("index");
             }
-
-            ModelState.AddModelError("", "Cos poszlo nie tak podczas dodawania zdjecia");
             return View(model);
         }
 

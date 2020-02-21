@@ -11,12 +11,15 @@
                 self.removeClass();
                 self.addClass("removeCommentPoint");
                 self.css("font-weight", "bold");
-                
+
                 var newPoints = parseInt($(`#commentCardPoints_${id}`).text()) + 1;
                 $(`#commentCardPoints_${id}`).text(newPoints.toString());
-
+            },
+            statusCode: {
+                401: function () {
+                    window.location.replace(siteRoot + "Account/Login");
+                }
             }
-
         });
     });
 
@@ -32,16 +35,21 @@
                 self.removeClass();
                 self.addClass("awardCommentPoint");
                 self.css("font-weight", "normal");
-                
+
                 var newPoints = parseInt($(`#commentCardPoints_${id}`).text()) - 1;
                 if (newPoints < 1) {
                     newPoints = 0;
                 }
                 $(`#commentCardPoints_${id}`).text(newPoints.toString());
+            },
+            statusCode: {
+                401: function () {
+                    window.location.replace(siteRoot + "Account/Login");
+                }
             }
         });
     });
-    
+
     $(document).on("click", ".awardMemePoint", function () {
         var self = $(this);
         var id = this.id.split("_")[1];
@@ -57,6 +65,11 @@
 
                 var newPoints = parseInt($(`#memeCardPoints_${id}`).text()) + 1;
                 $(`#memeCardPoints_${id}`).text(newPoints.toString());
+            },
+            statusCode: {
+                401: function () {
+                    window.location.replace(siteRoot + "Account/Login");
+                }
             }
         });
     });
@@ -79,6 +92,11 @@
                     newPoints = 0;
                 }
                 $(`#memeCardPoints_${id}`).text(newPoints.toString());
+            },
+            statusCode: {
+                401: function () {
+                    window.location.replace(siteRoot + "Account/Login");
+                }
             }
         });
     });
