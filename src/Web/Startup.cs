@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using memiarzeEu.Models;
 using memiarzeEu.Interfaces;
 using memiarzeEu.Services;
+using memiarzeEu.Validation;
 
 namespace memiarzeEu
 {
@@ -41,6 +42,7 @@ namespace memiarzeEu
             {
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
+                PasswordOptionsStore.IdentityOptions = options;
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 

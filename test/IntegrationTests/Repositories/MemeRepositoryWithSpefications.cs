@@ -26,7 +26,10 @@ namespace IntegrationTests.Repositories
                 .Options;
             dbContext = new ApplicationDbContext(dbOptions);
             memeRepo = new EfRepository<Meme>(dbContext);
-            SeedData();
+            if (!dbContext.Memes.Any())
+            {
+                SeedData();
+            }  
         }
 
         ~MemeRepositoryWithSpefications()

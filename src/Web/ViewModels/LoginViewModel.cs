@@ -8,10 +8,12 @@ namespace memiarzeEu.ViewModels
 {
     public class LoginViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Podaj nazwe użytkownika.")]
+        [Display(Name="Nazwa użytkownika")]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Podaj hasło.")]
+        [Display(Name = "Hasło")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

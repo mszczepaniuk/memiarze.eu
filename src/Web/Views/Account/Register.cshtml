@@ -5,8 +5,8 @@
 }
 <div class="row">
     <div class="col-md-12">
-        <form method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
+        <form id="registerForm" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="UserName"></label>
                 <input asp-for="UserName" class="form-control" />
@@ -14,15 +14,18 @@
             </div>
             <div class="form-group">
                 <label asp-for="Password"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <input id="passwordInput" asp-for="Password" class="form-control" />
+                <span id="passwordValidationInfo" asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ConfirmPassword"></label>
                 <input asp-for="ConfirmPassword" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-primary">Zarejestruj się</button>
         </form>
     </div>
 </div>
+@section scripts{
+    <script src="~/js/Register.js"></script>
+}

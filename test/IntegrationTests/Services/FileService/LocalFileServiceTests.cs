@@ -22,7 +22,7 @@ namespace IntegrationTests.Services.FileService
 
         public LocalFileServiceTests()
         {
-            var directoryPath = "PUT YOUR LOCAL PATH HERE \\memiarzeEu\\src\\Web\\wwwroot\\img";
+            var directoryPath = "PUT LOCAL PATH HERE memiarzeEu\\src\\Web\\wwwroot\\img";
             fileTestingFolderPath = Path.Combine(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName,"Services","FileService","test.jpg");
             memeFileService = new LocalMemeFileService(directoryPath);
             avatarFileService = new LocalAvatarFileService(directoryPath);
@@ -91,17 +91,5 @@ namespace IntegrationTests.Services.FileService
                 File.Delete(Path.Combine(fileService.DirectoryFullPath, Path.GetFileName(filePath)));
             }
         }
-
-        //[Fact]
-        //public void Meme_Delete()
-        //{
-        //    var mockFileName = "FakeFile.txt";
-        //    var filePath = Path.Combine(fileTestingFolderPath, "Delete", mockFileName);
-        //    File.Create(filePath).Dispose();
-
-        //    localFileService.Delete(filePath);
-
-        //    Assert.False(File.Exists(filePath));
-        //}
     }
 }
