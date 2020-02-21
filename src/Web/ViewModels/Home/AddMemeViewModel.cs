@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace memiarzeEu.ViewModels
+namespace memiarzeEu.ViewModels.Home
 {
     public class AddMemeViewModel
     {

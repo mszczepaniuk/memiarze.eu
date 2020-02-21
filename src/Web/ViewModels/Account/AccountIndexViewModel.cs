@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using memiarzeEu.Models;
 
-namespace memiarzeEu.ViewModels
+namespace memiarzeEu.ViewModels.Account
 {
     public class AccountIndexViewModel
     {

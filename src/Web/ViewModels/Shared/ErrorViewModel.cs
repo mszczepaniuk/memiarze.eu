@@ -1,6 +1,6 @@
 using System;
 
-namespace memiarzeEu.ViewModels
+namespace memiarzeEu.ViewModels.Shared
 {
     public class ErrorViewModel
     {
