@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using memiarzeEu.Interfaces;
+using memiarzeEu.Models;
+using memiarzeEu.Models.Interfaces;
+using memiarzeEu.Specifications;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -15,6 +19,12 @@ namespace memiarzeEu.Extensions
             var user = controllerBase.HttpContext.User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
             string userId = user?.Value;
             return userId;
+        }
+
+        public async static Task<bool> IsOwnedByCurrentUser<T>(this ControllerBase controllerBase, int elementId, IAsyncRepository<T> repo) where T : BaseEntity, IOwnedByUser
+        {
+            var result = await repo.GetAsync(new ConcreteUserIdAndElementIdSpec<T>(controllerBase.GetCurrentUserId(), elementId));
+            return result.Any();
         }
     }
 }

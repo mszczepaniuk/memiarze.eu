@@ -56,16 +56,6 @@ namespace IntegrationTests.Repositories
         }
 
         [Fact]
-        public async void PageOfMemesOrderedByDateSpec_SecondRecordOlderThanFirst()
-        {
-            int page = 1;
-            var memes = await memeRepo.GetAsync(new PageOfMemesOrderedByDateSpec(page));
-            var result = memes.FirstOrDefault();
-
-            Assert.True(result.UserId == "0");
-        }
-
-        [Fact]
         public async void PageOfMemesUserTopSpec_FirstElementHas2Points()
         {
             int page = 1;
@@ -75,7 +65,7 @@ namespace IntegrationTests.Repositories
         }
 
         [Fact]
-        public async void PageOfMemesUserTopSpec_SecondElementHas2Points()
+        public async void PageOfMemesUserTopSpec_SecondElementHas1Point()
         {
             int page = 1;
             var result = await memeRepo.GetAsync(new PageOfMemesUserTopSpec("2000", page));
@@ -83,16 +73,32 @@ namespace IntegrationTests.Repositories
             Assert.True(result[1].XdPoints.Count == 1);
         }
 
+        [Fact]
+        public async void ConcreteUserIdAndElementIdSpec_FindsOneResult()
+        {
+            var result = await memeRepo.GetAsync(new ConcreteUserIdAndElementIdSpec<Meme>("2000", 1));
+
+            Assert.True(result.Count == 1);
+        }
+
+        [Fact]
+        public async void ConcreteUserIdAndElementIdSpec_NullWhenBadInputs()
+        {
+            var result = await memeRepo.GetAsync(new ConcreteUserIdAndElementIdSpec<Meme>("2000", 5));
+
+            Assert.True(!result.Any());
+        }
+
         private void SeedData()
         {
-            var mockMemes = new List<Meme>();
-            mockMemes.Add(new Meme
+            dbContext.Memes.Add(new Meme
             {
                 Title = "2000",
                 UserId = "2000",
                 ImagePath = "2000",
                 XdPoints = new List<MemeXdPoint> { new MemeXdPoint() }
             });
+            var mockMemes = new List<Meme>();
             for (int i = 0; i < 20; i++)
             {
                 mockMemes.Add(new Meme
@@ -103,7 +109,6 @@ namespace IntegrationTests.Repositories
                 });
             }
             dbContext.AddRange(mockMemes);
-            dbContext.SaveChanges();
             dbContext.Memes.Add(new Meme
             {
                 Title = "0",

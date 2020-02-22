@@ -166,6 +166,10 @@ namespace memiarzeEu.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteMeme(int id)
         {
+            if (!(User.IsInRole("Admin") || await this.IsOwnedByCurrentUser(id, memeRepo)))
+            {
+                return Unauthorized();
+            }
             var meme = await memeRepo.GetByIdAsync(id);
             if (meme == null) return View("NotFound");
             await memeRepo.DeleteAsync(meme);
@@ -197,6 +201,10 @@ namespace memiarzeEu.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteComment(int id)
         {
+            if (!(User.IsInRole("Admin") || await this.IsOwnedByCurrentUser(id, commentRepo)))
+            {
+                return Unauthorized();
+            }
             var comment = await commentRepo.GetByIdAsync(id);
             if (comment == null) return View("NotFound");
             await commentRepo.DeleteAsync(comment);

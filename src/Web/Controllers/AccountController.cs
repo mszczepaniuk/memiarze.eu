@@ -96,6 +96,7 @@ namespace memiarzeEu.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
@@ -191,11 +192,14 @@ namespace memiarzeEu.Controllers
             });
         }
 
-        // TODO: Check authorization.
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> EditUser(string id)
         {
+            if (this.GetCurrentUserId() != id)
+            {
+                return Unauthorized();
+            }
             var user = await userManager.FindByIdAsync(id);
             if (user == null) return View("NotFound");
             var model = new EditUserViewModel
@@ -210,6 +214,10 @@ namespace memiarzeEu.Controllers
         [Authorize]
         public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
+            if (this.GetCurrentUserId() != model.Id)
+            {
+                return Unauthorized();
+            }
             if (ModelState.IsValid)
             {
                 var user = await userManager.FindByIdAsync(model.Id);
@@ -238,6 +246,10 @@ namespace memiarzeEu.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string id)
         {
+            if (!(User.IsInRole("Admin") || this.GetCurrentUserId() == id))
+            {
+                return Unauthorized();
+            }
             var user = await userManager.FindByIdAsync(id);
             if (user == null) return View("NotFound");
             await userManager.DeleteAsync(user);

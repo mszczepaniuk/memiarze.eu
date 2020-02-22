@@ -6,7 +6,7 @@
                 <img src=@Model.AvatarPath style="height:50px; width:50px; margin:2px 5px 2px 2px">
                 @if (Model.UserId != null)
                 {
-                    <a asp-action="TopMemes" asp-controller="Account" asp-route-userId="@Model.UserId" asp-route-memePage="1" style="text-decoration: none; color: black; font-size:11px;">@Model.UserName</a>
+                    <a asp-action="TopMemes" asp-controller="Account" asp-route-userId="@Model.UserId" asp-route-memePage="1" style="text-decoration: none; color: black; font-size:13px;">@Model.UserName</a>
                 }
                 else
                 {
@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="card-body p-0">
-        <p>@Model.Text</p>
+        <p class="m-2">@Model.Text</p>
     </div>
     <div class="card-footer">
         <div class="row">
