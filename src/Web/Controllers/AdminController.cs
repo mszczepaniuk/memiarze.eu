@@ -56,7 +56,7 @@ namespace memiarzeEu.Controllers
         {
             var user = await userManager.FindByIdAsync(id);
             if (user != null) { await userManager.AddToRoleAsync(user, "Admin"); }
-            else { return View("NotFound"); }
+            else { return NotFound(); }
             return RedirectToAction("ListAdmins", "Admin");
         }
 
@@ -65,7 +65,7 @@ namespace memiarzeEu.Controllers
         {
             var user = await userManager.FindByIdAsync(id);
             if (user != null) { await userManager.RemoveFromRoleAsync(user, "Admin"); }
-            else { return View("NotFound"); }
+            else { return NotFound(); }
             return RedirectToAction("ListUsers", "Admin");
         }
     }

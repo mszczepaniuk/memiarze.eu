@@ -123,7 +123,7 @@ namespace memiarzeEu.Controllers
             int maxNumberOfPages = (await memeRepo.CountAsync(new CountUserMemesSpec(userId)) - 1) / 10 + 1;
             if (maxNumberOfPages == 0) { maxNumberOfPages = 1; }
 
-            if (memePage < 1 || memePage > maxNumberOfPages) { return View("NotFound"); }
+            if (memePage < 1 || memePage > maxNumberOfPages) { return NotFound(); }
 
             var currentUserId = this.GetCurrentUserId();
 
@@ -160,7 +160,7 @@ namespace memiarzeEu.Controllers
             int maxNumberOfPages = (await commentRepo.CountAsync(new CountUserCommentsSpec(userId)) - 1) / 10 + 1;
             if (maxNumberOfPages == 0) { maxNumberOfPages = 1; }
 
-            if (commentPage < 1 || commentPage > maxNumberOfPages) { return View("NotFound"); }
+            if (commentPage < 1 || commentPage > maxNumberOfPages) { return NotFound(); }
 
             var currentUserId = this.GetCurrentUserId();
 
@@ -198,10 +198,10 @@ namespace memiarzeEu.Controllers
         {
             if (this.GetCurrentUserId() != id)
             {
-                return Unauthorized();
+                return Forbid();
             }
             var user = await userManager.FindByIdAsync(id);
-            if (user == null) return View("NotFound");
+            if (user == null) return NotFound();
             var model = new EditUserViewModel
             {
                 Id = id,
@@ -216,7 +216,7 @@ namespace memiarzeEu.Controllers
         {
             if (this.GetCurrentUserId() != model.Id)
             {
-                return Unauthorized();
+                return Forbid();
             }
             if (ModelState.IsValid)
             {
@@ -248,10 +248,10 @@ namespace memiarzeEu.Controllers
         {
             if (!(User.IsInRole("Admin") || this.GetCurrentUserId() == id))
             {
-                return Unauthorized();
+                return Forbid();
             }
             var user = await userManager.FindByIdAsync(id);
-            if (user == null) return View("NotFound");
+            if (user == null) return NotFound();
             await userManager.DeleteAsync(user);
             if (user.AvatarPath != null) { fileService.Delete(user.AvatarPath); }
             return RedirectToAction("Index", "Home");

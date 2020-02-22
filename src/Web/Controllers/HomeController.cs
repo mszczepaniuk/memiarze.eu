@@ -53,7 +53,7 @@ namespace memiarzeEu.Controllers
             int maxNumberOfPages = (await memeRepo.CountAsync(new BaseSpecification<Meme>()) - 1) / 10 + 1;
             if (maxNumberOfPages == 0) { maxNumberOfPages = 1; }
 
-            if (page.Value < 1 || page.Value > maxNumberOfPages) { return View("NotFound"); }
+            if (page.Value < 1 || page.Value > maxNumberOfPages) { return NotFound(); }
 
             var userId = this.GetCurrentUserId();
 
@@ -84,12 +84,12 @@ namespace memiarzeEu.Controllers
             int maxNumberOfPages = (await commentRepo.CountAsync(new CountCommentsOnMeme(id)) - 1) / 20 + 1;
             if (maxNumberOfPages == 0) { maxNumberOfPages = 1; }
 
-            if (commentPage < 0 || commentPage > maxNumberOfPages) { return View("NotFound"); }
+            if (commentPage < 0 || commentPage > maxNumberOfPages) { return NotFound(); }
 
             var memes = await memeRepo.GetAsync(new SingleMemeSpec(id));
             var meme = memes.FirstOrDefault();
 
-            if (meme == null) { return View("NotFound"); }
+            if (meme == null) { return NotFound(); }
 
             var userId = this.GetCurrentUserId();
 
@@ -131,7 +131,7 @@ namespace memiarzeEu.Controllers
             var memes = await memeRepo.GetAsync(new RandomElementSpec<Meme>(memeCount));
             var meme = memes.FirstOrDefault();
 
-            if (meme == null) { return View("NotFound"); }
+            if (meme == null) { return NotFound(); }
 
             return RedirectToAction("SingleMeme", new { id = meme.Id, commentPage = 1 });
         }
@@ -168,10 +168,10 @@ namespace memiarzeEu.Controllers
         {
             if (!(User.IsInRole("Admin") || await this.IsOwnedByCurrentUser(id, memeRepo)))
             {
-                return Unauthorized();
+                return Forbid();
             }
             var meme = await memeRepo.GetByIdAsync(id);
-            if (meme == null) return View("NotFound");
+            if (meme == null) return NotFound();
             await memeRepo.DeleteAsync(meme);
             memeFileService.Delete(meme.ImagePath);
             return RedirectToAction("Index");
@@ -203,10 +203,10 @@ namespace memiarzeEu.Controllers
         {
             if (!(User.IsInRole("Admin") || await this.IsOwnedByCurrentUser(id, commentRepo)))
             {
-                return Unauthorized();
+                return Forbid();
             }
             var comment = await commentRepo.GetByIdAsync(id);
-            if (comment == null) return View("NotFound");
+            if (comment == null) return NotFound();
             await commentRepo.DeleteAsync(comment);
             return RedirectToAction("Index");
         }
