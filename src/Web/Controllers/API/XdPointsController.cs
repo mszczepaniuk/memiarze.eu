@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using memiarzeEu.Extensions;
 using memiarzeEu.Interfaces;
 using memiarzeEu.Models;
+using memiarzeEu.Models.Interfaces;
 using memiarzeEu.Specifications.XdPointSpec;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +16,7 @@ namespace memiarzeEu.Controllers.API
     [Authorize]
     [ApiController]
     public abstract class XdPointsController<T1, T2> : ControllerBase
-        where T1 : BaseEntity // Probably a better option would an interface, something like IPointable
+        where T1 : IPointable<T2>
         where T2 : XdPoint
 
     {
