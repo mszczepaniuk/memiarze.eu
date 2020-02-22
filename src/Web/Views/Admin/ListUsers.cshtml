@@ -3,10 +3,13 @@
     ViewBag.Title = "Lista uzytkownikow";
 }
 
+    <form id="userSearchForm" class="d-flex" asp-controller="Admin" asp-action="ListUsers">
+        <input id="userSearchInput" class="form-control mr-1" type="text" name="search">
+        <button type="submit" class="btn btn-primary">Wyszukaj</button>    
+    </form>
 
 @if (Model.Any())
 {
-
     <table class="table">
         <thead>
             <tr>
@@ -18,25 +21,20 @@
         <tbody>
             @foreach (var user in Model)
             {
-            <tr>
-                <td><a asp-action="Index" asp-controller="Account" asp-route-id=@user.Id style="text-decoration: none; color: black;">@user.UserName</a></td>
-                <td>
-                    <form method="post" asp-action="AddAdminRole" asp-controller="Admin" asp-route-id="@user.Id">
-                        <button class="btn btn-primary" type="submit" onclick="return confirm('Czy na pewno chcesz nadac uprawnienia dla: @user.UserName')">Daj admina</button>
-                    </form>
-                </td>
-                <td>
-                    <form method="post" asp-action="DeleteUser" asp-controller="Account" asp-route-id="@user.Id">
-                        <button class="btn btn-danger" type="submit" onclick="return confirm('Czy na pewno chcesz usunac konto: @user.UserName')">Usun konto</button>
-                    </form>
-                </td>
-            </tr>
+                <tr>
+                    <td><a asp-action="Index" asp-controller="Account" asp-route-id=@user.Id style="text-decoration: none; color: black;">@user.UserName</a></td>
+                    <td>
+                        <form method="post" asp-action="AddAdminRole" asp-controller="Admin" asp-route-id="@user.Id">
+                            <button class="btn btn-primary" type="submit" onclick="return confirm('Czy na pewno chcesz nadac uprawnienia dla: @user.UserName')">Daj admina</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" asp-action="DeleteUser" asp-controller="Account" asp-route-id="@user.Id">
+                            <button class="btn btn-danger" type="submit" onclick="return confirm('Czy na pewno chcesz usunac konto: @user.UserName')">Usun konto</button>
+                        </form>
+                    </td>
+                </tr>
             }
-
         </tbody>
     </table>
-}
-else
-{
-    <h1>Brak zwykłych użytkowników</h1>
 }

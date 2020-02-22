@@ -51,6 +51,7 @@ namespace memiarzeEu
                     var user = new ApplicationUser { UserName = "admin" };
                     await userManager.CreateAsync(user, "admin123");
                     await userManager.AddToRoleAsync(user, "Admin");
+                    await userManager.AddToRoleAsync(user, "User");
                 }
             }
         }

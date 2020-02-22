@@ -15,48 +15,49 @@ namespace memiarzeEu.Controllers
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly ApplicationDbContext dbContext;
 
-        public AdminController(UserManager<ApplicationUser> userManager, ApplicationDbContext dbContext)
+        public AdminController(UserManager<ApplicationUser> userManager)
         {
             this.userManager = userManager;
-            this.dbContext = dbContext;
         }
 
         [HttpGet]
         public async Task<IActionResult> ListAdmins()
         {
-            var model = new List<ApplicationUser>();
-            var adminRoleId = dbContext.Roles.Single(a => a.NormalizedName == "ADMIN").Id;
-            var userRoles = dbContext.UserRoles.Where(a => a.RoleId == adminRoleId).ToList();
-            foreach (var userRole in userRoles)
-            {
-                model.Add(await dbContext.Users.FindAsync(userRole.UserId));
-            }
-            return View(model);
+            var admins = await userManager.GetUsersInRoleAsync("Admin");     
+            return View(admins.ToList());
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> ListUsers()
-        //{
-        //    var model = new List<ApplicationUser>();
-        //    var adminRoleId = dbContext.Roles.Single(a => a.NormalizedName == "ADMIN").Id;
-        //    foreach (var user in dbContext.Users.ToList())
-        //    {
-        //        if (!dbContext.UserRoles.Where(a => a.UserId == user.Id).Any(a => a.RoleId == adminRoleId))
-        //        {
-        //            model.Add(user);
-        //        }
-        //    }
-        //    return View(model);
-        //}
+        [HttpGet]
+        public IActionResult ListUsers()
+        {
+            return View(new List<ApplicationUser>());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ListUsers(string search)
+        {
+            if (string.IsNullOrEmpty(search)) { return View(new List<ApplicationUser>()); }
+            var admins = await userManager.GetUsersInRoleAsync("Admin");
+            var users = await userManager.GetUsersInRoleAsync("User");
+
+            var result = users
+                .AsQueryable()
+                .Where(x => x.UserName.Contains(search))
+                .Except(admins)
+                .ToList();
+
+            return View(result);
+        }
 
         [HttpPost]
         public async Task<IActionResult> AddAdminRole(string id)
         {
             var user = await userManager.FindByIdAsync(id);
-            if (user != null) { await userManager.AddToRoleAsync(user, "Admin"); }
-            else { return NotFound(); }
+            if (user == null || await userManager.IsInRoleAsync(user,"Admin")) { return BadRequest(); }
+
+            await userManager.AddToRoleAsync(user, "Admin"); 
+
             return RedirectToAction("ListAdmins", "Admin");
         }
 
@@ -64,8 +65,10 @@ namespace memiarzeEu.Controllers
         public async Task<IActionResult> RemoveAdminRole(string id)
         {
             var user = await userManager.FindByIdAsync(id);
-            if (user != null) { await userManager.RemoveFromRoleAsync(user, "Admin"); }
-            else { return NotFound(); }
+            if (user == null || !await userManager.IsInRoleAsync(user, "Admin")) { return BadRequest(); }
+
+            await userManager.RemoveFromRoleAsync(user, "Admin");
+
             return RedirectToAction("ListUsers", "Admin");
         }
     }
