@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Web\memiarzeEu.csproj" />
+    <ProjectReference Include="..\..\src\Web\memiarzeEu.csproj" />
   </ItemGroup>
 
 </Project>
