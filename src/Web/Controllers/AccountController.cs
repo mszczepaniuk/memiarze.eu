@@ -12,6 +12,14 @@ using System.Linq;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using memiarzeEu.ViewModels.Account;
+using memiarzeEu.Extensions;
+using memiarzeEu.Interfaces;
+using memiarzeEu.Specifications;
+using memiarzeEu.ViewModels.Shared;
+using memiarzeEu.Specifications.XdPointSpec;
+using memiarzeEu.Specifications.MemeSpec;
+using memiarzeEu.Specifications.CommentSpec;
 
 namespace memiarzeEu.Controllers
 {
@@ -19,11 +27,27 @@ namespace memiarzeEu.Controllers
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly IAsyncRepository<Meme> memeRepo;
+        private readonly IAsyncRepository<Comment> commentRepo;
+        private readonly IAsyncRepository<MemeXdPoint> memeXdPointRepo;
+        private readonly IAsyncRepository<CommentXdPoint> commentXdPointRepo;
+        private readonly IAvatarFileService fileService;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IAsyncRepository<Meme> memeRepo,
+            IAsyncRepository<Comment> commentRepo,
+            IAsyncRepository<MemeXdPoint> memeXdPointRepo,
+            IAsyncRepository<CommentXdPoint> commentXdPointRepo,
+            IAvatarFileService fileService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.memeRepo = memeRepo;
+            this.commentRepo = commentRepo;
+            this.memeXdPointRepo = memeXdPointRepo;
+            this.commentXdPointRepo = commentXdPointRepo;
+            this.fileService = fileService;
         }
 
         [HttpGet]
@@ -40,7 +64,7 @@ namespace memiarzeEu.Controllers
                 var result = await signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
                 if (result.Succeeded) { return RedirectToAction("Index", "Home"); }
 
-                ModelState.AddModelError("", "Błędna próba logowania");
+                ModelState.AddModelError("", "Błędna próba logowania.");
             }
             return View(model);
         }
@@ -66,7 +90,7 @@ namespace memiarzeEu.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                ModelState.AddModelError("", "Doszło do błędu podczas próby rejestracji");
+                ModelState.AddModelError("", "Doszło do błędu podczas próby rejestracji.");
             }
             return View(model);
         }
@@ -93,23 +117,87 @@ namespace memiarzeEu.Controllers
             }
         }
 
-        //public async Task<IActionResult> Index(string id)
-        //{
-        //    var user = await userManager.FindByIdAsync(id);
-        //    if (user == null) return View("NotFound");
-        //    user.Memes = dbContext.Memes.Where(m => m.ApplicationUserId == id).Include(m => m.XdPoints).OrderByDescending(m => m.CreationDate).ToList();
-        //    return View(user);
-        //}
+        public async Task<IActionResult> TopMemes(string userId, int memePage)
+        {
+            int maxNumberOfPages = (await memeRepo.CountAsync(new CountUserMemesSpec(userId)) - 1) / 10 + 1;
+            if (maxNumberOfPages == 0) { maxNumberOfPages = 1; }
 
-            // TODO: Check authorization.
+            if (memePage < 1 || memePage > maxNumberOfPages) { return View("NotFound"); }
+
+            var currentUserId = this.GetCurrentUserId();
+
+            var memes = await memeRepo.GetAsync(new PageOfMemesUserTopSpec(userId, memePage));
+            var memeViewModels = new List<MemeCardViewModel>();
+
+            foreach (var meme in memes)
+            {
+                var userPoint = await memeXdPointRepo.GetAsync(new MemeXdPointConcreteUserIdAndMemeIdSpec(currentUserId, meme.Id));
+                var isXdClicked = userPoint.FirstOrDefault() != null ? true : false;
+                memeViewModels.Add(new MemeCardViewModel(meme, isXdClicked));
+            }
+
+            var paginationViewModel = new PaginationViewModel()
+            {
+                ActionName = "TopMemes",
+                ControllerName = "Account",
+                CurrentPage = memePage,
+                MaxNumberOfPages = maxNumberOfPages,
+                AllRouteData = new Dictionary<string, string> { { "userId", userId } },
+                AlternativePageName = "memePage"
+            };
+
+            return View(new TopMemesViewModel
+            {
+                User = await userManager.FindByIdAsync(userId),
+                MemeCardViewModels = memeViewModels,
+                PaginationViewModel = paginationViewModel
+            });
+        }
+
+        public async Task<IActionResult> TopComments(string userId, int commentPage)
+        {
+            int maxNumberOfPages = (await commentRepo.CountAsync(new CountUserCommentsSpec(userId)) - 1) / 10 + 1;
+            if (maxNumberOfPages == 0) { maxNumberOfPages = 1; }
+
+            if (commentPage < 1 || commentPage > maxNumberOfPages) { return View("NotFound"); }
+
+            var currentUserId = this.GetCurrentUserId();
+
+            var comments = await commentRepo.GetAsync(new PageOfCommentsUserTopSpec(userId, commentPage));
+            var commentViewModels = new List<CommentViewModel>();
+
+            foreach (var comment in comments)
+            {
+                var userPoint = await commentXdPointRepo.GetAsync(new CommentXdPointConcreteUserIdAndMemeIdSpec(currentUserId, comment.Id));
+                var isXdClicked = userPoint.FirstOrDefault() != null ? true : false;
+                commentViewModels.Add(new CommentViewModel(comment, isXdClicked));
+            }
+
+            var paginationViewModel = new PaginationViewModel()
+            {
+                ActionName = "TopComments",
+                ControllerName = "Account",
+                CurrentPage = commentPage,
+                MaxNumberOfPages = maxNumberOfPages,
+                AllRouteData = new Dictionary<string, string> { { "userId", userId } },
+                AlternativePageName = "commentPage"
+            };
+
+            return View(new TopCommentsViewModel
+            {
+                User = await userManager.FindByIdAsync(userId),
+                CommentViewModels = commentViewModels,
+                PaginationViewModel = paginationViewModel
+            });
+        }
+
+        // TODO: Check authorization.
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> EditUser(string id)
         {
             var user = await userManager.FindByIdAsync(id);
             if (user == null) return View("NotFound");
-            // Hacky authorization
-            if (user.UserName != User.Identity.Name) throw new InvalidCredentialException();
             var model = new EditUserViewModel
             {
                 Id = id,
@@ -118,55 +206,42 @@ namespace memiarzeEu.Controllers
             return View(model);
         }
 
-        //[HttpPost]
-        //[Authorize]
-        //public async Task<IActionResult> EditUser(EditUserViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var user = await userManager.FindByIdAsync(model.Id);
-        //        user.AvatarPath = model.CurrentAvatarPath;
-        //        if (model.Avatar != null)
-        //        {
-        //            string uploadsFolder = Path.Combine(hostEnvironment.ContentRootPath, "wwwroot", "img", "avatars");
-        //            string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Avatar.FileName;
-        //            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-        //            using (var fileStream = new FileStream(filePath, FileMode.Create))
-        //            {
-        //                model.Avatar.CopyTo(fileStream);
-        //            }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> EditUser(EditUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.FindByIdAsync(model.Id);
 
-        //            if ((user.AvatarPath != null) && (System.IO.File.Exists(Path.Combine(uploadsFolder, user.AvatarPath))))
-        //            {
-        //                string oldAvatarPath = Path.Combine(uploadsFolder, user.AvatarPath);
-        //                System.IO.File.Delete(oldAvatarPath);
-        //            }
+                if (model.Avatar != null)
+                {
+                    if (user.AvatarPath != null) { fileService.Delete(user.AvatarPath); }
+                    user.AvatarPath = fileService.Save(model.Avatar);
+                }
 
-        //            user.AvatarPath = uniqueFileName;
-        //        }
+                user.About = model.About;
+                var result = await userManager.UpdateAsync(user);
 
-        //        user.About = model.About;
-        //        var result = await userManager.UpdateAsync(user);
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", "Cos poszlo nie tak podczas aktualizowania profilu.");
+                    return View(model);
+                }
 
-        //        if (!result.Succeeded)
-        //        {
-        //            ModelState.AddModelError("", "Cos poszlo nie tak podczas aktualizowania zdjecia");
-        //            return View(model);
-        //        }
+                return RedirectToAction("TopMemes", "Account", new { userId = model.Id, memePage = 1 });
+            }
+            ModelState.AddModelError("", "Cos poszlo nie tak.");
+            return View(model);
+        }
 
-        //        return RedirectToAction("Index", "Account", new { id = model.Id });
-        //    }
-        //    ModelState.AddModelError("", "Cos poszlo nie tak");
-        //    return View(model);
-        //}
-
-        //TODO: Add succes confirmation page. Add authorization for users wanting to delete their own accounts.
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await userManager.FindByIdAsync(id);
             if (user == null) return View("NotFound");
             await userManager.DeleteAsync(user);
+            if (user.AvatarPath != null) { fileService.Delete(user.AvatarPath); }
             return RedirectToAction("Index", "Home");
         }
     }

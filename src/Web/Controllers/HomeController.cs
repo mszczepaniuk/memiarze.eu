@@ -20,6 +20,8 @@ using memiarzeEu.Specifications.XdPointSpec;
 using memiarzeEu.Specifications;
 using memiarzeEu.Extensions;
 using memiarzeEu.Specifications.CommentSpec;
+using memiarzeEu.ViewModels.Home;
+using memiarzeEu.ViewModels.Shared;
 
 namespace memiarzeEu.Controllers
 {

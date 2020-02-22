@@ -29,7 +29,7 @@ namespace IntegrationTests.Repositories
             if (!dbContext.Memes.Any())
             {
                 SeedData();
-            }  
+            }
         }
 
         ~MemeRepositoryWithSpefications()
@@ -65,6 +65,24 @@ namespace IntegrationTests.Repositories
             Assert.True(result.UserId == "0");
         }
 
+        [Fact]
+        public async void PageOfMemesUserTopSpec_FirstElementHas2Points()
+        {
+            int page = 1;
+            var result = await memeRepo.CountAsync(new PageOfMemesUserTopSpec("2000", page));
+
+            Assert.True(result == 2);
+        }
+
+        [Fact]
+        public async void PageOfMemesUserTopSpec_SecondElementHas2Points()
+        {
+            int page = 1;
+            var result = await memeRepo.GetAsync(new PageOfMemesUserTopSpec("2000", page));
+
+            Assert.True(result[1].XdPoints.Count == 1);
+        }
+
         private void SeedData()
         {
             var mockMemes = new List<Meme>();
@@ -72,7 +90,8 @@ namespace IntegrationTests.Repositories
             {
                 Title = "2000",
                 UserId = "2000",
-                ImagePath = "2000"
+                ImagePath = "2000",
+                XdPoints = new List<MemeXdPoint> { new MemeXdPoint() }
             });
             for (int i = 0; i < 20; i++)
             {
@@ -88,8 +107,9 @@ namespace IntegrationTests.Repositories
             dbContext.Memes.Add(new Meme
             {
                 Title = "0",
-                UserId = "0",
-                ImagePath = "0"
+                UserId = "2000",
+                ImagePath = "0",
+                XdPoints = new List<MemeXdPoint> { new MemeXdPoint(), new MemeXdPoint() }
             });
             dbContext.SaveChanges();
         }

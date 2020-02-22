@@ -1,0 +1,19 @@
+﻿@model TopMemesViewModel
+@{
+    ViewBag.Title = Model.User.UserName;
+}
+    <div class="row">
+        <div class="col-md-3  mt-2 mb-2">
+            @await Html.PartialAsync("_ProfileAccordion", Model.User)
+        </div>
+        <div class="col-md-6 mt-2 mb-2">
+            @if (Model.MemeCardViewModels.Any())
+            {
+                foreach (var meme in Model.MemeCardViewModels)
+                {
+                    @await Html.PartialAsync("_MemeCard", meme)
+                }
+            }
+            @await Html.PartialAsync("_Pagination", Model.PaginationViewModel)
+        </div>
+    </div>

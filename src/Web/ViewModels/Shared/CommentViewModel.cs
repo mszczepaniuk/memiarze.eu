@@ -1,6 +1,7 @@
 ﻿using memiarzeEu.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace memiarzeEu.ViewModels.Shared
             Text = comment.Text;
             UserName = comment.User == null ? "Usuniete konto" : comment.User.UserName;
             XdPoints = comment.XdPoints.Count;
-            AvatarPath = comment.User.AvatarPath;
+            AvatarPath = comment.User.AvatarPath ?? "/img/avatars/default.png"; ;
             CreationDate = comment.CreationDate.ToString("MM/dd/yyyy HH:mm");
             IsXdClicked = isXdClicked;
             UserId = comment.UserId;

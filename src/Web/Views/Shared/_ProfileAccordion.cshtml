@@ -1,6 +1,6 @@
 ﻿@model ApplicationUser
 @{
-    var avatarPath = Model.AvatarPath != null ? $"/img/avatars/{System.Uri.EscapeDataString(Model.AvatarPath)}" : "/img/avatars/default.png";
+    var avatarPath = Model.AvatarPath ?? "/img/avatars/default.png";
     var about = Model.About ?? "Uzytkownik nic o sobie nie napisal";
 }
 
@@ -37,9 +37,8 @@
         </div>
         <div id="collapsethree" class="collapse" data-parent="#accordion">
             <div class="card-body">
-                <a asp-action="Index" asp-controller="Account" asp-route-id=@Model.Id class="btn btn-primary btn-block">Wszystkie</a>
-                <a asp-action="TopCarousel" asp-controller="Account" asp-route-id=@Model.Id class="btn btn-primary btn-block">Top3 - karuzela</a>
-                <a asp-action="TopLightBox" asp-controller="Account" asp-route-id=@Model.Id class="btn btn-primary btn-block">Top3 - LightBox</a>
+                <a asp-action="TopMemes" asp-controller="Account" asp-route-userId=@Model.Id asp-route-memePage="1" class="btn btn-primary btn-block">Top memy</a>
+                <a asp-action="TopComments" asp-controller="Account" asp-route-userId=@Model.Id asp-route-commentPage="1" class="btn btn-primary btn-block">Top komentarze</a>
 
                 @if (User.Identity.Name == Model.UserName)
                 {
@@ -49,8 +48,7 @@
                 @if ((User.IsInRole("Admin")) || (User.Identity.Name == Model.UserName))
                 {
                     <form method="post" asp-action="DeleteUser" asp-route-id=@Model.Id class="mt-2">
-                        @* TODO: Prettier way of confirming delete action. *@
-                        <button class="btn btn-danger btn-block" type="submit" onclick="return confirm('Czy na pewno chcesz usunac konto: @Model.UserName')">Usun konto</button>
+                        <button class="btn btn-danger btn-block" type="submit" onclick="return confirm('Czy na pewno chcesz usunac konto: @Model.UserName')">Usuń konto</button>
                     </form>
                 }
 
