@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace memiarzeEu.Models
+namespace memiarzeEu.Models.Interfaces
 {
-    public interface IEntityUpdateDate
+    public interface IOwnedByUser
     {
-        public DateTime UpdateDate { get; set; }
+        public string UserId { get; set; }
     }
 }

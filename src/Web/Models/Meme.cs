@@ -1,4 +1,5 @@
-﻿using System;
+﻿using memiarzeEu.Models.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace memiarzeEu.Models
 {
-    public class Meme : BaseEntity, IEntityCreationDate, IEntityUpdateDate
+    public class Meme : BaseEntity, IEntityCreationDate, IEntityUpdateDate, IOwnedByUser, IPointable<MemeXdPoint>
     {
         [Required]
         [MaxLength(100)]

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using memiarzeEu.Models.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace memiarzeEu.Models
 {
-    public class Comment : BaseEntity, IEntityCreationDate, IEntityUpdateDate
+    public class Comment : BaseEntity, IEntityCreationDate, IEntityUpdateDate, IOwnedByUser, IPointable<CommentXdPoint>
     {
         [MaxLength(300)]
         public string Text { get; set; }
