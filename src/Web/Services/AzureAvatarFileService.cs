@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace memiarzeEu.Services
 {
-    public class AzureAvatarFileService : BaseAzureFileService, IMemeFileService
+    public class AzureAvatarFileService : BaseAzureFileService, IAvatarFileService
     {
         public AzureAvatarFileService(IConfiguration configuration) : base(configuration)
         {
