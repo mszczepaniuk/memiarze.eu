@@ -22,6 +22,7 @@ using memiarzeEu.Extensions;
 using memiarzeEu.Specifications.CommentSpec;
 using memiarzeEu.ViewModels.Home;
 using memiarzeEu.ViewModels.Shared;
+using Microsoft.Extensions.Configuration;
 
 namespace memiarzeEu.Controllers
 {
@@ -32,18 +33,21 @@ namespace memiarzeEu.Controllers
         private readonly IAsyncRepository<CommentXdPoint> commentXdPointRepo;
         private readonly IFileService memeFileService;
         private readonly IAsyncRepository<Comment> commentRepo;
+        private readonly IConfiguration configuration;
 
         public HomeController(IAsyncRepository<Meme> memeRepo,
             IAsyncRepository<MemeXdPoint> memeXdPointRepo,
             IAsyncRepository<CommentXdPoint> commentXdPointRepo,
             IMemeFileService memeFileService,
-            IAsyncRepository<Comment> commentRepo)
+            IAsyncRepository<Comment> commentRepo,
+            IConfiguration configuration)
         {
             this.memeRepo = memeRepo;
             this.memeXdPointRepo = memeXdPointRepo;
             this.commentXdPointRepo = commentXdPointRepo;
             this.memeFileService = memeFileService;
             this.commentRepo = commentRepo;
+            this.configuration = configuration;
         }
 
         [HttpGet]
@@ -64,7 +68,7 @@ namespace memiarzeEu.Controllers
             {
                 var userPoint = await memeXdPointRepo.GetAsync(new MemeXdPointConcreteUserIdAndMemeIdSpec(userId, meme.Id));
                 var isXdClicked = (userId == null || userPoint.FirstOrDefault() == null) ? false : true;
-                memeViewModels.Add(new MemeCardViewModel(meme, isXdClicked));
+                memeViewModels.Add(new MemeCardViewModel(meme, isXdClicked, configuration));
             }
 
             var paginationViewModel = new PaginationViewModel()
@@ -103,7 +107,7 @@ namespace memiarzeEu.Controllers
             {
                 var userPoint = await commentXdPointRepo.GetAsync(new CommentXdPointConcreteUserIdAndMemeIdSpec(userId, comment.Id));
                 var isXdClicked = userPoint.FirstOrDefault() != null ? true : false;
-                commentViewModels.Add(new CommentViewModel(comment, isXdClicked));
+                commentViewModels.Add(new CommentViewModel(comment, isXdClicked, configuration));
             }
 
             var paginationViewModel = new PaginationViewModel()
@@ -118,7 +122,7 @@ namespace memiarzeEu.Controllers
 
             return View(new SingleMemeViewModel
             {
-                MemeCardViewModel = new MemeCardViewModel(meme, isMemeXdClicked),
+                MemeCardViewModel = new MemeCardViewModel(meme, isMemeXdClicked, configuration),
                 CommentViewModels = commentViewModels,
                 PaginationViewModel = paginationViewModel
             });

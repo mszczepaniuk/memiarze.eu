@@ -1,4 +1,5 @@
 ﻿using memiarzeEu.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace memiarzeEu.Services
 {
     public class LocalAvatarFileService : BaseLocalFileService, IAvatarFileService
     {
-        public LocalAvatarFileService() : base()
+        public LocalAvatarFileService(IConfiguration configuration) : base(configuration)
         {
             directoryName = "avatars";
         }

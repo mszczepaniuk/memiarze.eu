@@ -1,4 +1,5 @@
 ﻿using memiarzeEu.Models;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,19 +19,12 @@ namespace memiarzeEu.ViewModels.Shared
         public string AvatarPath { get; }
         public bool IsXdClicked { get; }
 
-        public CommentViewModel(Comment comment, bool isXdClicked)
+        public CommentViewModel(Comment comment, bool isXdClicked, IConfiguration configuration)
         {
             Text = comment.Text;
             UserName = comment.User == null ? "Usuniete konto" : comment.User.UserName;
             XdPoints = comment.XdPoints.Count;
-            if(comment.User == null || comment.User.AvatarPath == null)
-            {
-                AvatarPath = "/img/avatars/default.png";
-            }
-            else
-            {
-                AvatarPath = comment.User.AvatarPath;
-            }
+            AvatarPath = comment.User == null ? configuration.GetSection("DefaultAvatarPath").Value : comment.User.AvatarPath;
             CreationDate = comment.CreationDate.ToString("MM/dd/yyyy HH:mm");
             IsXdClicked = isXdClicked;
             UserId = comment.UserId;

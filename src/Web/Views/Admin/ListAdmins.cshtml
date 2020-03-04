@@ -19,7 +19,7 @@
             @foreach (var admin in Model)
             {
             <tr>
-                <td><a asp-action="Index" asp-controller="Account" asp-route-id=@admin.Id style="text-decoration: none; color: black;">@admin.UserName</a></td>
+                <td><a asp-action="TopMemes" asp-controller="Account" asp-route-userId=@admin.Id asp-route-memePage="1" style="text-decoration: none; color: black;">@admin.UserName</a></td>
                 <td>
                     <form method="post" asp-action="RemoveAdminRole" asp-controller="Admin" asp-route-id="@admin.Id">
                         <button class="btn btn-danger" type="submit" onclick="return confirm('Czy na pewno chcesz odebrac uprawnienia: @admin.UserName')">Odbierz admina</button>

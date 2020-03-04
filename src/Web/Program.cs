@@ -35,6 +35,7 @@ namespace memiarzeEu
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
 
                 if (!roleManager.RoleExistsAsync("User").Result)
                 {
@@ -48,7 +49,7 @@ namespace memiarzeEu
 
                 if (userManager.FindByNameAsync("admin").Result == null)
                 {
-                    var user = new ApplicationUser { UserName = "admin" };
+                    var user = new ApplicationUser { UserName = "admin", AvatarPath = configuration.GetSection("DefaultAvatarPath").Value };
                     await userManager.CreateAsync(user, "admin123");
                     await userManager.AddToRoleAsync(user, "Admin");
                     await userManager.AddToRoleAsync(user, "User");

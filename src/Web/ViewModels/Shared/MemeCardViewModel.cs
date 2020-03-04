@@ -1,4 +1,5 @@
 ﻿using memiarzeEu.Models;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,20 +19,13 @@ namespace memiarzeEu.ViewModels.Shared
         public bool IsXdClicked { get; }
         public string AvatarPath { get; }
 
-        public MemeCardViewModel(Meme meme, bool isXdClicked)
+        public MemeCardViewModel(Meme meme, bool isXdClicked, IConfiguration configuration)
         {
             Id = meme.Id;
             Title = meme.Title;
             ImagePath = meme.ImagePath;
             UserName = meme.User == null ? "Usuniete konto" : meme.User.UserName;
-            if (meme.User == null || meme.User.AvatarPath == null)
-            {
-                AvatarPath = "/img/avatars/default.png";
-            }
-            else
-            {
-                AvatarPath = meme.User.AvatarPath;
-            }
+            AvatarPath = meme.User == null ? configuration.GetSection("DefaultAvatarPath").Value : meme.User.AvatarPath;
             UserId = meme.UserId;
             XdPoints = meme.XdPoints.Count;
             CreationDate = meme.CreationDate.ToString("MM/dd/yyyy HH:mm");

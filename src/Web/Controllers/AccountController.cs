@@ -20,6 +20,7 @@ using memiarzeEu.ViewModels.Shared;
 using memiarzeEu.Specifications.XdPointSpec;
 using memiarzeEu.Specifications.MemeSpec;
 using memiarzeEu.Specifications.CommentSpec;
+using Microsoft.Extensions.Configuration;
 
 namespace memiarzeEu.Controllers
 {
@@ -32,6 +33,7 @@ namespace memiarzeEu.Controllers
         private readonly IAsyncRepository<MemeXdPoint> memeXdPointRepo;
         private readonly IAsyncRepository<CommentXdPoint> commentXdPointRepo;
         private readonly IAvatarFileService fileService;
+        private readonly IConfiguration configuration;
 
         public AccountController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -39,7 +41,8 @@ namespace memiarzeEu.Controllers
             IAsyncRepository<Comment> commentRepo,
             IAsyncRepository<MemeXdPoint> memeXdPointRepo,
             IAsyncRepository<CommentXdPoint> commentXdPointRepo,
-            IAvatarFileService fileService)
+            IAvatarFileService fileService,
+            IConfiguration configuration)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -48,6 +51,7 @@ namespace memiarzeEu.Controllers
             this.memeXdPointRepo = memeXdPointRepo;
             this.commentXdPointRepo = commentXdPointRepo;
             this.fileService = fileService;
+            this.configuration = configuration;
         }
 
         [HttpGet]
@@ -80,7 +84,7 @@ namespace memiarzeEu.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName };
+                var user = new ApplicationUser { UserName = model.UserName, AvatarPath = configuration.GetSection("DefaultAvatarPath").Value };
                 var result = await userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
@@ -134,7 +138,7 @@ namespace memiarzeEu.Controllers
             {
                 var userPoint = await memeXdPointRepo.GetAsync(new MemeXdPointConcreteUserIdAndMemeIdSpec(currentUserId, meme.Id));
                 var isXdClicked = userPoint.FirstOrDefault() != null ? true : false;
-                memeViewModels.Add(new MemeCardViewModel(meme, isXdClicked));
+                memeViewModels.Add(new MemeCardViewModel(meme, isXdClicked, configuration));
             }
 
             var paginationViewModel = new PaginationViewModel()
@@ -171,7 +175,7 @@ namespace memiarzeEu.Controllers
             {
                 var userPoint = await commentXdPointRepo.GetAsync(new CommentXdPointConcreteUserIdAndMemeIdSpec(currentUserId, comment.Id));
                 var isXdClicked = userPoint.FirstOrDefault() != null ? true : false;
-                commentViewModels.Add(new CommentViewModel(comment, isXdClicked));
+                commentViewModels.Add(new CommentViewModel(comment, isXdClicked, configuration));
             }
 
             var paginationViewModel = new PaginationViewModel()

@@ -1,5 +1,6 @@
 ﻿using memiarzeEu.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,13 +12,15 @@ namespace memiarzeEu.Services
     public abstract class BaseLocalFileService : IFileService
     {
         protected readonly string directoryPath;
+        private readonly IConfiguration configuration;
         protected string directoryName;
         public string DirectoryFullPath { get { return Path.Combine(directoryPath, directoryName); } }
         
-        public BaseLocalFileService()
+        public BaseLocalFileService(IConfiguration configuration)
         {
             string projectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
             directoryPath = Path.Combine(projectDirectory, "src", "Web", "wwwroot", "img");
+            this.configuration = configuration;
         }
         
         // For testing
@@ -39,9 +42,12 @@ namespace memiarzeEu.Services
 
         public void Delete(string filePath)
         {
-            var fileName = Path.GetFileName(filePath);
-            var deletePath = Path.Combine(DirectoryFullPath, fileName);
-            File.Delete(deletePath);
+            if (filePath != configuration.GetSection("DefaultAvatarPath").Value)
+            {
+                var fileName = Path.GetFileName(filePath);
+                var deletePath = Path.Combine(DirectoryFullPath, fileName);
+                File.Delete(deletePath);
+            }
         }
     }
 }
