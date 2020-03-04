@@ -16,6 +16,7 @@ using memiarzeEu.Models;
 using memiarzeEu.Interfaces;
 using memiarzeEu.Services;
 using memiarzeEu.Validation;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace memiarzeEu
 {
@@ -49,6 +50,11 @@ namespace memiarzeEu
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 512000;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

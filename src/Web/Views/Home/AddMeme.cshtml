@@ -12,8 +12,12 @@
     </div>
     <div class="form-group">
         <label asp-for="Image">Wybierz zdjecie</label>
-        <input asp-for="Image" class="form-control-file" />
-        <span asp-validation-for="Image" class="text-danger"></span>
+        <input asp-for="Image" onchange="ValidateImage(this)" class="form-control-file" />
+        <span id="imageValidationInfo" asp-validation-for="Image" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Dodaj</button>
 </form>
+
+@section scripts{
+    <script src="~/js/ValidateImage.js"></script>
+}
