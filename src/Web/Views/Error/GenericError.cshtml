@@ -1,11 +1,12 @@
-﻿@{
-    ViewBag.Title = $"Błąd {ViewBag.ErrorStatusCode}";
+﻿@model GenericErrorViewModel
+@{
+    ViewBag.Title = $"Błąd {Model.ErrorCode}";
 }
 
 <div class="container m-4">
     <div class="col-12 text-center">
-        <h1>HTTP @ViewBag.ErrorStatusCode</h1>
-        <img style="width:100%; max-width:600px;" src="~/img/assets/ErrorImage.png" />
+        <h1>HTTP @Model.ErrorCode</h1>
+        <img style="width:100%; max-width:600px;" src=@Model.ErrorImagePath />
     </div>
 </div>
 
