@@ -63,7 +63,7 @@ namespace memiarzeEu.Controllers
             foreach (var meme in memes)
             {
                 var userPoint = await memeXdPointRepo.GetAsync(new MemeXdPointConcreteUserIdAndMemeIdSpec(userId, meme.Id));
-                var isXdClicked = userPoint.FirstOrDefault() != null ? true : false;
+                var isXdClicked = (userId == null || userPoint.FirstOrDefault() == null) ? false : true;
                 memeViewModels.Add(new MemeCardViewModel(meme, isXdClicked));
             }
 

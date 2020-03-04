@@ -3,10 +3,10 @@
     ViewBag.Title = Model.User.UserName;
 }
     <div class="row">
-        <div class="col-md-3  mt-2 mb-2">
+        <div class="col-lg-3  mt-2 mb-2">
             @await Html.PartialAsync("_ProfileAccordion", Model.User)
         </div>
-        <div class="col-md-6 mt-2 mb-2">
+        <div class="col-lg-6 mt-2 mb-2">
             @if (Model.CommentViewModels.Any())
             {
                 foreach (var comment in Model.CommentViewModels)

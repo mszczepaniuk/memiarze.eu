@@ -1,11 +1,12 @@
-﻿using System;
+﻿using memiarzeEu.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace memiarzeEu.Models
 {
-    public class XdPointFactory<T> where T : XdPoint
+    public class XdPointFactory<T> : IXdPointFactory<T> where T : XdPoint
     {
         public XdPoint Create(string userId, int id)
         {

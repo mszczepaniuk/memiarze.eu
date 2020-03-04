@@ -2,7 +2,7 @@
 <div class="card mb-3">
     <div class="card-header" style="font-weight: bold;">
         <div class="row">
-            <div class="col-6">
+            <div class="col-6 p-0">
                 <img src=@Model.AvatarPath style="height:50px; width:50px; margin:2px 5px 2px 2px">
                 @if (Model.UserId != null)
                 {
@@ -10,10 +10,10 @@
                 }
                 else
                 {
-                    <p style="font-size:11px;">@Model.UserName</p>
+                    <a style="text-decoration: none; color: black; font-size:13px;">@Model.UserName</a>
                 }
             </div>
-            <div class="col-6">
+            <div class="col-6 p-0">
                 <p class="text-right" style="font-size:11px;">@Model.CreationDate</p>
             </div>
         </div>
@@ -21,7 +21,7 @@
     <div class="card-body p-0">
         <p class="m-2">@Model.Text</p>
     </div>
-    <div class="card-footer">
+    <div class="card-footer" style="max-height:50px">
         <div class="row">
             @if ((User.IsInRole("Admin")) || ((User.Identity.Name != null) && (User.Identity.Name == Model.UserName)))
             {

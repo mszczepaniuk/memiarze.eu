@@ -23,7 +23,14 @@ namespace memiarzeEu.ViewModels.Shared
             Text = comment.Text;
             UserName = comment.User == null ? "Usuniete konto" : comment.User.UserName;
             XdPoints = comment.XdPoints.Count;
-            AvatarPath = comment.User.AvatarPath ?? "/img/avatars/default.png"; ;
+            if(comment.User == null || comment.User.AvatarPath == null)
+            {
+                AvatarPath = "/img/avatars/default.png";
+            }
+            else
+            {
+                AvatarPath = comment.User.AvatarPath;
+            }
             CreationDate = comment.CreationDate.ToString("MM/dd/yyyy HH:mm");
             IsXdClicked = isXdClicked;
             UserId = comment.UserId;

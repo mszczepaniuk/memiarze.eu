@@ -16,6 +16,7 @@ namespace memiarzeEu.ViewModels.Shared
         public int XdPoints { get; }
         public string CreationDate { get; }
         public bool IsXdClicked { get; }
+        public string AvatarPath { get; }
 
         public MemeCardViewModel(Meme meme, bool isXdClicked)
         {
@@ -23,6 +24,14 @@ namespace memiarzeEu.ViewModels.Shared
             Title = meme.Title;
             ImagePath = meme.ImagePath;
             UserName = meme.User == null ? "Usuniete konto" : meme.User.UserName;
+            if (meme.User == null || meme.User.AvatarPath == null)
+            {
+                AvatarPath = "/img/avatars/default.png";
+            }
+            else
+            {
+                AvatarPath = meme.User.AvatarPath;
+            }
             UserId = meme.UserId;
             XdPoints = meme.XdPoints.Count;
             CreationDate = meme.CreationDate.ToString("MM/dd/yyyy HH:mm");

@@ -11,7 +11,8 @@ namespace memiarzeEu.Controllers.API
     public class CommentXdPointController : XdPointsController<Comment, CommentXdPoint>
     {
         public CommentXdPointController(IAsyncRepository<CommentXdPoint> elementPointsRepo,
-            IAsyncRepository<Comment> elementRepo) :base(elementPointsRepo, elementRepo)
+            IAsyncRepository<Comment> elementRepo, 
+            IXdPointFactory<CommentXdPoint> xdPointFactory) :base(elementPointsRepo, elementRepo, xdPointFactory)
         {
             specification = new CommentXdPointConcreteUserIdAndMemeIdSpec();
         }

@@ -18,17 +18,19 @@ namespace memiarzeEu.Controllers.API
     public abstract class XdPointsController<T1, T2> : ControllerBase
         where T1 : IPointable<T2>
         where T2 : XdPoint
-
     {
         protected readonly IAsyncRepository<T2> elementPointsRepo;
         protected readonly IAsyncRepository<T1> elementRepo;
+        private readonly IXdPointFactory<T2> xdPointFactory;
         protected BaseXdPointUserIdAndMemeId<T2> specification;
 
         public XdPointsController(IAsyncRepository<T2> elementPointsRepo,
-            IAsyncRepository<T1> elementRepo)
+            IAsyncRepository<T1> elementRepo,
+            IXdPointFactory<T2> xdPointFactory)
         {
             this.elementPointsRepo = elementPointsRepo;
             this.elementRepo = elementRepo;
+            this.xdPointFactory = xdPointFactory;
         }
 
         [HttpPost("api/{controller}/{id}/award")]
@@ -39,8 +41,6 @@ namespace memiarzeEu.Controllers.API
 
             var userPoint = await FindUserPoint(specification, id);
             if (userPoint != null) { return BadRequest(new { message = "User already awarded a point to this element" }); }
-
-            var xdPointFactory = new XdPointFactory<T2>();
 
             var xdPoint = xdPointFactory.Create(this.GetCurrentUserId(), id) as T2;
 

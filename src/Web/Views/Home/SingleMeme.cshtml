@@ -7,7 +7,7 @@
     <div class="col-md-3"></div>
     <div class="col-md-6">
         @await Html.PartialAsync("_MemeCard", Model.MemeCardViewModel)
-        <div class="container">
+        <div class="container p-0">
             <form id="commentForm" asp-controller="Home" asp-action="AddComment" asp-route-memeId="@Model.MemeCardViewModel.Id">
                 <textarea id="commentInput" class="form-control" type="text" name="text" rows="7" maxlength="300"></textarea>
                 <button type="submit" class="btn btn-primary mt-2 mb-3">Dodaj komentarz</button>

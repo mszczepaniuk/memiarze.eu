@@ -34,6 +34,7 @@ namespace memiarzeEu
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
             services.AddScoped<IMemeFileService, LocalMemeFileService>();
             services.AddScoped<IAvatarFileService, LocalAvatarFileService>();
+            services.AddSingleton(typeof(IXdPointFactory<>), typeof(XdPointFactory<>)); 
 
             services.AddDbContextPool<ApplicationDbContext>(options =>
                 options.UseSqlServer(
