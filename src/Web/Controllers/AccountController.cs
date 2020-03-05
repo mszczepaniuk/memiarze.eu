@@ -137,7 +137,7 @@ namespace memiarzeEu.Controllers
             foreach (var meme in memes)
             {
                 var userPoint = await memeXdPointRepo.GetAsync(new MemeXdPointConcreteUserIdAndMemeIdSpec(currentUserId, meme.Id));
-                var isXdClicked = userPoint.FirstOrDefault() != null ? true : false;
+                var isXdClicked = (currentUserId == null || userPoint.FirstOrDefault() == null) ? false : true;
                 memeViewModels.Add(new MemeCardViewModel(meme, isXdClicked, configuration));
             }
 
@@ -174,7 +174,7 @@ namespace memiarzeEu.Controllers
             foreach (var comment in comments)
             {
                 var userPoint = await commentXdPointRepo.GetAsync(new CommentXdPointConcreteUserIdAndMemeIdSpec(currentUserId, comment.Id));
-                var isXdClicked = userPoint.FirstOrDefault() != null ? true : false;
+                var isXdClicked = (currentUserId == null || userPoint.FirstOrDefault() == null) ? false : true;
                 commentViewModels.Add(new CommentViewModel(comment, isXdClicked, configuration));
             }
 

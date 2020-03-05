@@ -98,7 +98,7 @@ namespace memiarzeEu.Controllers
             var userId = this.GetCurrentUserId();
 
             var memeUserPoint = await memeXdPointRepo.GetAsync(new MemeXdPointConcreteUserIdAndMemeIdSpec(userId, meme.Id));
-            var isMemeXdClicked = memeUserPoint.FirstOrDefault() != null ? true : false;
+            var isMemeXdClicked = (userId == null || memeUserPoint.FirstOrDefault() == null) ? false : true;
 
             var comments = await commentRepo.GetAsync(new PageOfCommentsSingleMemeSpec(commentPage, id));
             var commentViewModels = new List<CommentViewModel>();
@@ -106,7 +106,7 @@ namespace memiarzeEu.Controllers
             foreach (var comment in comments)
             {
                 var userPoint = await commentXdPointRepo.GetAsync(new CommentXdPointConcreteUserIdAndMemeIdSpec(userId, comment.Id));
-                var isXdClicked = userPoint.FirstOrDefault() != null ? true : false;
+                var isXdClicked = (userId == null || userPoint.FirstOrDefault() == null) ? false : true;
                 commentViewModels.Add(new CommentViewModel(comment, isXdClicked, configuration));
             }
 
@@ -132,6 +132,8 @@ namespace memiarzeEu.Controllers
         public async Task<IActionResult> RandomMeme()
         {
             var memeCount = await memeRepo.CountAsync(new BaseSpecification<Meme>());
+            if (memeCount == 0) { return NotFound(); }
+
             var memes = await memeRepo.GetAsync(new RandomElementSpec<Meme>(memeCount));
             var meme = memes.FirstOrDefault();
 
