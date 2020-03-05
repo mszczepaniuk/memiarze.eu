@@ -27,18 +27,18 @@ namespace memiarzeEu.Services
         public string Save(IFormFile file)
         {
             var container = GetCloudBlobContainer();
-            string uniqueFileName = Uri.EscapeDataString(Guid.NewGuid().ToString() + "_" + file.FileName);
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
             // Get the reference to the block blob from the container
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(uniqueFileName);
             // Upload the file
             Task.WaitAll(blockBlob.UploadFromStreamAsync(file.OpenReadStream()));
 
-            return DirectoryFullPath + $"/{uniqueFileName}";
+            return DirectoryFullPath + $"/{Uri.EscapeDataString(uniqueFileName)}";
         }
 
         public void Delete(string filePath)
         {
-            var fileName = filePath.Split("/").Last();
+            var fileName = Uri.UnescapeDataString(filePath).Split("/").Last();
             if(fileName != "default.png")
             {
                 var container = GetCloudBlobContainer();

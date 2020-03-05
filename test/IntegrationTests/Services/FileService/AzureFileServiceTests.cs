@@ -50,7 +50,7 @@ namespace IntegrationTests.Services.FileService
             Stream file;
             using (file = File.OpenRead(fileTestingFolderPath))
             {
-                IFormFile formFile = new FormFile(file, 0, file.Length, "test", "test.jpg");
+                IFormFile formFile = new FormFile(file, 0, file.Length, "nazwa ze spacjami", "test.jpg");
                 filePath = fileService.Save(formFile);
                 fileName = filePath.Split("/").Last();
             }
