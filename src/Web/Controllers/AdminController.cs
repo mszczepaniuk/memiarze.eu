@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using memiarzeEu.Models;
-using memiarzeEu.ViewModels;
-using memiarzeEu.Data;
+﻿using memiarzeEu.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace memiarzeEu.Controllers
 {
@@ -24,7 +21,7 @@ namespace memiarzeEu.Controllers
         [HttpGet]
         public async Task<IActionResult> ListAdmins()
         {
-            var admins = await userManager.GetUsersInRoleAsync("Admin");     
+            var admins = await userManager.GetUsersInRoleAsync("Admin");
             return View(admins.ToList());
         }
 
@@ -54,9 +51,9 @@ namespace memiarzeEu.Controllers
         public async Task<IActionResult> AddAdminRole(string id)
         {
             var user = await userManager.FindByIdAsync(id);
-            if (user == null || await userManager.IsInRoleAsync(user,"Admin")) { return BadRequest(); }
+            if (user == null || await userManager.IsInRoleAsync(user, "Admin")) { return BadRequest(); }
 
-            await userManager.AddToRoleAsync(user, "Admin"); 
+            await userManager.AddToRoleAsync(user, "Admin");
 
             return RedirectToAction("ListAdmins", "Admin");
         }

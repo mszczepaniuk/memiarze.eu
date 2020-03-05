@@ -1,8 +1,5 @@
-﻿using System;
+﻿using memiarzeEu.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using memiarzeEu.Models;
 
 namespace memiarzeEu.ViewModels.Account
 {

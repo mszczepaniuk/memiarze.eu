@@ -1,28 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using memiarzeEu.Models;
-using memiarzeEu.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using System.IO;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Identity;
-using memiarzeEu.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using memiarzeEu.Extensions;
 using memiarzeEu.Interfaces;
-using memiarzeEu.Specifications.MemeSpec;
-using System.Security.Claims;
-using memiarzeEu.Specifications.XdPointSpec;
+using memiarzeEu.Models;
 using memiarzeEu.Specifications;
-using memiarzeEu.Extensions;
 using memiarzeEu.Specifications.CommentSpec;
+using memiarzeEu.Specifications.MemeSpec;
+using memiarzeEu.Specifications.XdPointSpec;
 using memiarzeEu.ViewModels.Home;
 using memiarzeEu.ViewModels.Shared;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace memiarzeEu.Controllers
 {

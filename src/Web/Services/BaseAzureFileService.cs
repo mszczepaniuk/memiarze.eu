@@ -5,7 +5,6 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -39,7 +38,7 @@ namespace memiarzeEu.Services
         public void Delete(string filePath)
         {
             var fileName = Uri.UnescapeDataString(filePath).Split("/").Last();
-            if(fileName != "default.png")
+            if (fileName != "default.png")
             {
                 var container = GetCloudBlobContainer();
                 var blockBlob = container.GetBlockBlobReference(fileName);

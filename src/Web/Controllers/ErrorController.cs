@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using memiarzeEu.ViewModels.Error;
-using memiarzeEu.ViewModels.Shared;
+﻿using memiarzeEu.ViewModels.Error;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;

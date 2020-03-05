@@ -1,9 +1,7 @@
 ﻿using memiarzeEu.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace memiarzeEu.Specifications.XdPointSpec
 {
@@ -11,7 +9,7 @@ namespace memiarzeEu.Specifications.XdPointSpec
     {
         public CommentXdPointConcreteUserIdAndMemeIdSpec(string userId, int commentId) : base(userId, commentId)
         {
-            
+
         }
 
         public CommentXdPointConcreteUserIdAndMemeIdSpec()

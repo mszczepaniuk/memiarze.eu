@@ -2,7 +2,6 @@
 using memiarzeEu.Models;
 using memiarzeEu.Specifications;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

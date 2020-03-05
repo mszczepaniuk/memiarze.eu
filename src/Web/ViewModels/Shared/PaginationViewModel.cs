@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace memiarzeEu.ViewModels.Shared
 {
@@ -11,7 +8,7 @@ namespace memiarzeEu.ViewModels.Shared
         public int MaxNumberOfPages { get; set; }
         public string ControllerName { get; set; }
         public string ActionName { get; set; }
-        public Dictionary<string, string> AllRouteData {get; set;}
+        public Dictionary<string, string> AllRouteData { get; set; }
         public string AlternativePageName { get; set; }
     }
 }

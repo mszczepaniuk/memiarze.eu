@@ -1,9 +1,5 @@
 ﻿using memiarzeEu.Models;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace memiarzeEu.ViewModels.Shared
 {
@@ -12,7 +8,7 @@ namespace memiarzeEu.ViewModels.Shared
         public int Id { get; }
         public string Title { get; }
         public string ImagePath { get; }
-        public string UserName{ get; }
+        public string UserName { get; }
         public string UserId { get; }
         public int XdPoints { get; }
         public string CreationDate { get; }

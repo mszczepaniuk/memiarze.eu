@@ -1,10 +1,5 @@
 ﻿using memiarzeEu.Models;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace memiarzeEu.ViewModels.Shared
 {

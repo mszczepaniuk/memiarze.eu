@@ -2,10 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace memiarzeEu.Services
 {
@@ -15,14 +12,14 @@ namespace memiarzeEu.Services
         private readonly IConfiguration configuration;
         protected string directoryName;
         public string DirectoryFullPath { get { return Path.Combine(directoryPath, directoryName); } }
-        
+
         public BaseLocalFileService(IConfiguration configuration)
         {
             string projectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
             directoryPath = Path.Combine(projectDirectory, "src", "Web", "wwwroot", "img");
             this.configuration = configuration;
         }
-        
+
         // For testing
         public BaseLocalFileService(string directoryPath)
         {
